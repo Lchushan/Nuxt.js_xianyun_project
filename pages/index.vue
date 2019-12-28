@@ -80,7 +80,13 @@ export default {
   methods: {
     //实现tab栏的跳转
     handleOption(index) {
-      this.currentOption=index
+      //设置当前tab
+      this.currentOption = index
+      //若当前的tab栏是飞机，直接跳转到飞机的页面
+      const item = this.options[index]
+      if (item.name === '机票') {
+        return this.$router.push(item.pageUrl)
+      }
     },
     handleSearch() {}
   }
