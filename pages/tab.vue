@@ -1,6 +1,6 @@
 <template>
   <div class="tab">
-    <div class="head">
+    <div class="header">
       <span
         v-for="(item,index) in ['新闻','体育','娱乐']"
         :key="index"
@@ -8,7 +8,7 @@
         :class="{active:current===index}"
       >{{item}}</span>
     </div>
-    <div class="body">
+    <div class="main">
       <div v-if="current===0">
         <ul>
           <li>普通新闻1</li>
@@ -49,25 +49,14 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang='less'>
 .tab {
-  margin: 100px auto;
+  margin: 0 auto;
   width: 600px;
-  height: 500px;
-  border: 1px solid #000;
-  .head {
-    span.active {
-      color: #f00;
-      border-bottom: 1px solid #f00;
-    }
-  }
-  .body {
-    position: relative;
-    > div {
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
+  height: 300px;
+  .active {
+    color: #f00;
+    border-bottom: 1px solid #f00;
   }
 }
 </style>

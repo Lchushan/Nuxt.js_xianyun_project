@@ -78,7 +78,10 @@ export default {
     })
   },
   methods: {
-    handleOption(index) {},
+    //实现tab栏的跳转
+    handleOption(index) {
+      this.currentOption=index
+    },
     handleSearch() {}
   }
 }
