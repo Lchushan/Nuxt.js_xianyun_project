@@ -88,7 +88,11 @@ export default {
         return this.$router.push(item.pageUrl)
       }
     },
-    handleSearch() {}
+    // 点击搜索栏的搜索按钮，跳转页面，并得到结果
+    // this.searchValue：搜索的关键词
+    handleSearch() {
+      this.$router.push(item.pageUrl + this.searchValue)
+    }
   }
 }
 </script>
