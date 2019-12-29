@@ -55,6 +55,7 @@ export default {
         if (!valid) return
         // 调用state中的异步的login函数
         this.$store.dispatch('user/login', this.form).then(res => {
+          //登录成功，进行消息提示
           if (res === true) {
             this.$message.success('登录成功')
           }

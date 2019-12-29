@@ -21,7 +21,7 @@
         <!-- 存在用户信息展示用户个人信息 -->
         <el-dropdown v-if="$store.state.user.userInfo.token">
           <span class="el-dropdown-link">
-            <img :src="$axios.defaults.baseURL+$store.state.user.userInfo.user.defaultAvatar" alt="">
+            <img :src="$axios.defaults.baseURL+$store.state.user.userInfo.user.defaultAvatar" alt />
             {{$store.state.user.userInfo.user.nickname}}
             <i
               class="el-icon-arrow-down el-icon--right"
@@ -30,7 +30,7 @@
 
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>个人中心</el-dropdown-item>
-            <el-dropdown-item>退出</el-dropdown-item>
+            <el-dropdown-item @click.native="handleLogout">退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
 
@@ -44,7 +44,24 @@
 export default {
   methods: {
     // 用户退出
-    handleLogout() {}
+    handleLogout() {
+      //弹出对话框，提示是否继续进行退出的操作
+      this.$confirm('此操作将退出登录, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          //点击确认按钮，确定退出，退出登录
+          this.$message.success('退出成功!')
+          //将state中的用户个人信息清空
+          this.$store.commit('user/setUserInfo', {})
+        })
+        .catch(() => {
+          //点击取消按钮，取消退出，继续登录
+          this.$message.info('已取消退出')
+        })
+    }
   }
 }
 </script>
