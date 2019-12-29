@@ -61,6 +61,8 @@ export default {
         }).then(res => {
           //登录成功返回上一页面
           // this.$router.back()
+          //把数据储存在state中
+          this.$store.commit('user/setName',res.data.user)
         })
       })
     }

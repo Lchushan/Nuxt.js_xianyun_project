@@ -16,6 +16,9 @@
         <nuxt-link to="/air">国内机票</nuxt-link>
       </el-row>
 
+      <!-- 已经登陆后，显示个人信息 -->
+      
+      {{$store.state.user.userInfo.nickname}}
       <!-- 登录/用户信息 -->
       <el-row type="flex" align="middle">
         <!-- 不存在用户信息展示登录注册链接 -->
