@@ -54,6 +54,14 @@ export default {
         // 验证不通过的时候，不提交（中断函数的运行）
         if (!valid) return
         //登录接口提交
+        this.$axios({
+          url: '/accounts/login',
+          method: 'post',
+          data: this.form
+        }).then(res => {
+          //登录成功返回上一页面
+          // this.$router.back()
+        })
       })
     }
   }
