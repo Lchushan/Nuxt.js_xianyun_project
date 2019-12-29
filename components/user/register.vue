@@ -93,7 +93,28 @@ export default {
   },
   methods: {
     // 发送验证码
-    handleSendCaptcha() {},
+    handleSendCaptcha() {
+      //判断手机号码不能为空
+      if (!this.form.username) {
+        this.$message.warning('手机号码不能为空，请输入用户手机号')
+        return
+      }
+      //判断手机号是否为11位数，直接发送请求
+      let rule = /^1[3-9][0-9]{9}$/
+      if (rule.test(this.form.username)) {
+        //发送请求获取手机验证码
+        this.$axios({
+          url: '/captchas',
+          method: 'post',
+          data: {
+            tel: this.form.username
+          }
+        }).then(res => {
+          //成功获取到验证码
+          this.$message.success('验证码：' + res.data.code)
+        })
+      }
+    },
 
     // 注册
     handleRegSubmit() {
