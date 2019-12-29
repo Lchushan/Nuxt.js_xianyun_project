@@ -5,7 +5,7 @@
       <el-input placeholder="用户名/手机" v-model="form.username"></el-input>
     </el-form-item>
 
-    <el-form-item class="form-item">
+    <el-form-item class="form-item" prop="password">
       <el-input placeholder="密码" type="password" v-model="form.password"></el-input>
     </el-form-item>
 
@@ -22,10 +22,14 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       const reg = /^1[3-9][0-9]{9}$/
-      if (reg.test(value)) {
-        callback()
+      if (value === '') {
+        callback('请输入用户名')
       } else {
-        callback('手机号码格式错误')
+        if (reg.test(value)) {
+          callback()
+        } else {
+          callback('手机号码格式错误')
+        }
       }
     }
     return {
@@ -36,14 +40,21 @@ export default {
       },
       // 表单规则
       rules: {
-        username: [{ validator: validateUsername, trigger: 'blur' }]
+        username: [{ validator: validateUsername, trigger: 'blur' }],
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
       }
     }
   },
   methods: {
     // 提交登录
     handleLoginSubmit() {
-      console.log(this.form)
+      // validate方法是element-ui给el-form表单提供验证的函数
+      // valid代表验证是否通过
+      this.$refs['form'].validate(valid => {
+        // 验证不通过的时候，不提交（中断函数的运行）
+        if (!valid) return
+        //登录接口提交
+      })
     }
   }
 }
