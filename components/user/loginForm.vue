@@ -62,7 +62,7 @@ export default {
           //登录成功返回上一页面
           // this.$router.back()
           //把数据储存在state中
-          this.$store.commit('user/setName',res.data.user)
+          this.$store.commit('user/setUserInfo',res.data)
         })
       })
     }

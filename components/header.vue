@@ -16,13 +16,26 @@
         <nuxt-link to="/air">国内机票</nuxt-link>
       </el-row>
 
-      <!-- 已经登陆后，显示个人信息 -->
-      
-      {{$store.state.user.userInfo.nickname}}
       <!-- 登录/用户信息 -->
       <el-row type="flex" align="middle">
+        <!-- 存在用户信息展示用户个人信息 -->
+        <el-dropdown v-if="$store.state.user.userInfo.token">
+          <span class="el-dropdown-link">
+            <img :src="$axios.defaults.baseURL+$store.state.user.userInfo.user.defaultAvatar" alt="">
+            {{$store.state.user.userInfo.user.nickname}}
+            <i
+              class="el-icon-arrow-down el-icon--right"
+            ></i>
+          </span>
+
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>个人中心</el-dropdown-item>
+            <el-dropdown-item>退出</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+
         <!-- 不存在用户信息展示登录注册链接 -->
-        <nuxt-link to="/user/login" class="account-link">登录 / 注册</nuxt-link>
+        <nuxt-link to="/user/login" class="account-link" v-else>登录 / 注册</nuxt-link>
       </el-row>
     </el-row>
   </header>
