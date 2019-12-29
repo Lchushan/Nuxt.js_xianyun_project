@@ -53,16 +53,11 @@ export default {
       this.$refs['form'].validate(valid => {
         // 验证不通过的时候，不提交（中断函数的运行）
         if (!valid) return
-        //登录接口提交
-        this.$axios({
-          url: '/accounts/login',
-          method: 'post',
-          data: this.form
-        }).then(res => {
-          //登录成功返回上一页面
-          // this.$router.back()
-          //把数据储存在state中
-          this.$store.commit('user/setUserInfo',res.data)
+        // 调用state中的异步的login函数
+        this.$store.dispatch('user/login', this.form).then(res => {
+          if (res === true) {
+            this.$message.success('登录成功')
+          }
         })
       })
     }

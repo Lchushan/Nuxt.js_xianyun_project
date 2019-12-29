@@ -16,4 +16,20 @@ export const mutations = {
 
 
 // 异步修改state的数据
-// export const actions = {}
+export const actions = {
+  login(state, data) {
+    //登录接口提交，必须需要return，返回值
+    return this.$axios({
+      url: '/accounts/login',
+      method: 'post',
+      data
+    }).then(res => {
+      //登录成功返回上一页面
+      this.$router.back()
+      //把数据储存在state中
+      state.commit('setUserInfo', res.data)
+      // 返回true
+      return true
+    })
+  }
+}
