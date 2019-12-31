@@ -25,7 +25,7 @@
           v-model="form.departCity"
         ></el-autocomplete>
       </el-form-item>
-      
+
       <el-form-item label="到达城市">
         <el-autocomplete
           :fetch-suggestions="queryDestSearch"
@@ -67,7 +67,9 @@ export default {
         destCity: '', //到大城市
         destCode: '', //到达城市代码
         departDate: '' //日期字符串
-      }
+      },
+      departData: [],
+      destData: []
     }
   },
   methods: {
@@ -75,22 +77,70 @@ export default {
     handleSearchTab(item, index) {},
 
     // 出发城市输入框获得焦点时触发
-    // value 是选中的值，cb是回调函数，接收要展示的列表
-    queryDepartSearch(value, cb) {
-      cb([{ value: 1 }, { value: 2 }, { value: 3 }])
+    // value 是选中的值，callback 是回调函数，接收要展示的列表
+    // 业务需求 输入的内容为空，不显示；输入内容，下拉列表显示（需要发送请求获取数据）
+    queryDepartSearch(value, callback) {
+      // 输入的值为空的时候，不显示下拉列表
+      if (value === '') {
+        callback([])
+        return
+      }
+      // 根据输入的内容，发送请求获取 出发实时机票城市 的信息
+      this.$axios({
+        url: '/airs/city',
+        params: {
+          name: value
+        }
+      }).then(res => {
+        const { data } = res.data
+        // 循环给data中每一项添加一个value属性，并且没有市字的
+        this.departData = data.map(v => {
+          v.value = v.name.replace('市', '')
+          return v
+        })
+        // 返回下拉列表的数组（value值）
+        callback(this.departData)
+      })
     },
 
     // 目标城市输入框获得焦点时触发
     // value 是选中的值，cb是回调函数，接收要展示的列表
-    queryDestSearch(value, cb) {
-      cb([{ value: 1 }, { value: 2 }, { value: 3 }])
+    queryDestSearch(value, callback) {
+      // 输入的值为空的时候，不显示下拉列表
+      if (value === '') {
+        callback([])
+        return
+      }
+      // 根据输入的内容，发送请求获取 出发实时机票城市 的信息
+      this.$axios({
+        url: '/airs/city',
+        params: {
+          name: value
+        }
+      }).then(res => {
+        const { data } = res.data
+        // 循环给data中每一项添加一个value属性，并且没有市字的
+        this.destData = data.map(v => {
+          v.value = v.name.replace('市', '')
+          return v
+        })
+        // 返回下拉列表的数组（value值）
+        callback(this.destData)
+      })
     },
 
     // 出发城市下拉选择时触发
-    handleDepartSelect(item) {},
+    handleDepartSelect(item) {
+      console.log(item)
+      this.form.departCity = item.value
+      this.form.departCode = item.sort
+    },
 
     // 目标城市下拉选择时触发
-    handleDestSelect(item) {},
+    handleDestSelect(item) {
+      this.form.destCity = item.value
+      this.form.destCode = item.sort
+    },
 
     // 确认选择日期时触发
     handleDate(value) {},
@@ -99,7 +149,9 @@ export default {
     handleReverse() {},
 
     // 提交表单是触发
-    handleSubmit() {}
+    handleSubmit() {
+      console.log(this.form)
+    }
   },
   mounted() {}
 }
