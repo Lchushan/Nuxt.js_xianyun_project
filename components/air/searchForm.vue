@@ -169,7 +169,7 @@ export default {
       }
     },
 
-    loseDestSelect(){
+    loseDestSelect() {
       if (this.destData.length > 0) {
         this.form.destCity = this.destData[0].value
         this.form.destCode = this.destData[0].sort
@@ -189,7 +189,40 @@ export default {
 
     // 提交表单是触发
     handleSubmit() {
-      console.log(this.form)
+
+      // 自定义校验规则（通过状态来判断）
+      const rules = {
+        departCity: {
+          value: this.form.departCity,
+          err_message: '出发城市不能为空'
+        },
+        destCity: {
+          value: this.form.destCity,
+          err_message: '到达城市不能为空'
+        },
+        departData: {
+          value: this.form.departDate,
+          err_message: '出发日期不能为空'
+        }
+      }
+      // 验证的变量
+      let valid = true
+
+      // 循环判断rules属性的值是否为空
+      Object.keys(rules).forEach(key => {
+        // 只要valid时false就没有必要再循环
+        if (valid === false) return
+        // 如果只有一项为空，把valid设置为false
+        if (rules[key].value === '') {
+          this.$message.error(rules[key].err_message)
+          valid = false
+          return
+        }
+      })
+
+      // 判断valid为false，就不再进行以下操作
+      if (valid === false) return
+
     }
   },
   mounted() {}
