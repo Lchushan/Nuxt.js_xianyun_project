@@ -4,7 +4,7 @@
       <!-- 顶部过滤列表 -->
       <div class="flights-content">
         <!-- 过滤条件 -->
-        <div></div>
+        <FlightsFilters :data="flightsData" />
 
         <!-- 航班头部布局 -->
         <FlightsListHead />
@@ -18,7 +18,7 @@
           @current-change="handleCurrentChange"
           :current-page="pageIndex"
           :page-sizes="[5, 10, 15, 20]"
-          :page-size="100"
+          :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
         ></el-pagination>
@@ -35,18 +35,19 @@
 <script>
 import FlightsListHead from '@/components/air/flightsListHead'
 import FlightsItem from '@/components/air/flightsItem'
+import FlightsFilters from '@/components/air/flightsFilters'
 
 export default {
   data() {
     return {
       // 航班总数据 { info, flights, total, options }
       flightsData: {
-        flights: []
+        flights: [],
+        info: {},
+        options: {}
       },
       // 缓存的变量，当该变量一旦被赋值之后不会被修改
-      cacheFlightsData: {
-        flights: []
-      },
+      cacheFlightsData: {},
       // 当前的页面
       pageIndex: 1,
       // 当然的条数
@@ -57,7 +58,8 @@ export default {
   },
   components: {
     FlightsListHead,
-    FlightsItem
+    FlightsItem,
+    FlightsFilters
   },
   computed: {
     // 计算属性监听函数内部引用实例的属性变化，一旦发生了变化，该函数会重新计算，并且返回新的值
