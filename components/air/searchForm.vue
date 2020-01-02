@@ -38,7 +38,14 @@
 
       <el-form-item label="出发时间">
         <!-- change 用户确认选择日期时触发 -->
-        <el-date-picker type="date" placeholder="请选择日期" style="width: 100%;" @change="handleDate"></el-date-picker>
+        <el-date-picker
+          type="date"
+          placeholder="请选择日期"
+          style="width: 100%;"
+          @change="handleDate"
+          v-model="form.departDate"
+          :picker-options="pickerDepartDate"
+        ></el-date-picker>
       </el-form-item>
 
       <el-form-item label>
@@ -53,6 +60,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
   data() {
     return {
@@ -69,7 +77,15 @@ export default {
         departDate: '' //日期字符串
       },
       departData: [],
-      destData: []
+      destData: [],
+      pickerDepartDate: {
+        // 禁用的范围：time.getTime()
+        // 当天的日期：Date.now()
+        // 一天的时间：3600 * 1000 * 24（毫秒）
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 3600 * 1000 * 24
+        }
+      }
     }
   },
   methods: {
@@ -143,7 +159,12 @@ export default {
     },
 
     // 确认选择日期时触发
-    handleDate(value) {},
+    handleDate(value) {
+      // 日期格式化
+      value = moment().format('YYYY-MM-DD')
+      // 把选中的日期赋值给表单的时间 departDate
+      this.form.departDate = value
+    },
 
     // 触发和目标城市切换时触发
     handleReverse() {},
