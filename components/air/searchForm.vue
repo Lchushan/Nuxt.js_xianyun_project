@@ -189,7 +189,6 @@ export default {
 
     // 提交表单是触发
     handleSubmit() {
-
       // 自定义校验规则（通过状态来判断）
       const rules = {
         departCity: {
@@ -223,6 +222,11 @@ export default {
       // 判断valid为false，就不再进行以下操作
       if (valid === false) return
 
+      // 跳转到机票的列表页
+      this.$router.push({
+        path: '/air/flights',
+        query: this.form
+      })
     }
   },
   mounted() {}
