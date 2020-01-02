@@ -23,6 +23,7 @@
           @select="handleDepartSelect"
           class="el-autocomplete"
           v-model="form.departCity"
+          @blur="loseDepartSelect"
         ></el-autocomplete>
       </el-form-item>
 
@@ -33,6 +34,7 @@
           @select="handleDestSelect"
           class="el-autocomplete"
           v-model="form.destCity"
+          @blur="loseDestSelect"
         ></el-autocomplete>
       </el-form-item>
 
@@ -156,6 +158,22 @@ export default {
     handleDestSelect(item) {
       this.form.destCity = item.value
       this.form.destCode = item.sort
+    },
+
+    // 出发城市没有点击下拉选择时就失去焦点时触发
+    // 出发城市输入框失去焦点时候默认选中第一个城市
+    loseDepartSelect() {
+      if (this.departData.length > 0) {
+        this.form.departCity = this.departData[0].value
+        this.form.departCode = this.departData[0].sort
+      }
+    },
+
+    loseDestSelect(){
+      if (this.destData.length > 0) {
+        this.form.destCity = this.destData[0].value
+        this.form.destCode = this.destData[0].sort
+      }
     },
 
     // 确认选择日期时触发
