@@ -46,7 +46,7 @@
             <img :src="item.cover" />
             <el-row class="layer-bar" type="flex" justify="space-between">
               <span>{{item.departCity}}-{{item.destCity}}</span>
-              <span>￥699</span>
+              <span>￥{{item.price}}</span>
             </el-row>
           </nuxt-link>
         </el-col>
@@ -76,6 +76,15 @@ export default {
         }
       ]
     }
+  },
+  mounted(){
+    // 获取特价机票的数据
+    this.$axios({
+      url: '/airs/sale',
+    }).then(res=>{
+      const {data} = res.data
+      this.sales = data
+    })
   }
 }
 </script>
