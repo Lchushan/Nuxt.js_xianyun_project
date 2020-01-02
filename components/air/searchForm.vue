@@ -169,6 +169,7 @@ export default {
       }
     },
 
+   // 到达城市输入框失去焦点时候默认选中第一个城市
     loseDestSelect() {
       if (this.destData.length > 0) {
         this.form.destCity = this.destData[0].value
