@@ -27,6 +27,7 @@
       <!-- 侧边栏 -->
       <div class="aside">
         <!-- 侧边栏组件 -->
+        <FlightsAside />
       </div>
     </el-row>
   </section>
@@ -36,6 +37,7 @@
 import FlightsListHead from '@/components/air/flightsListHead'
 import FlightsItem from '@/components/air/flightsItem'
 import FlightsFilters from '@/components/air/flightsFilters'
+import FlightsAside from '@/components/air/flightsAside'
 
 export default {
   data() {
@@ -63,7 +65,8 @@ export default {
   components: {
     FlightsListHead,
     FlightsItem,
-    FlightsFilters
+    FlightsFilters,
+    FlightsAside
   },
   computed: {
     // 计算属性监听函数内部引用实例的属性变化，一旦发生了变化，该函数会重新计算，并且返回新的值
@@ -97,7 +100,7 @@ export default {
     handleSizeChange(val) {
       this.pageSize = val
     },
-    //修改分页条码的当前页码
+    //修改分页条码的当前页码ss
     handleCurrentChange(val) {
       this.pageIndex = val
     },
