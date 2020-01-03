@@ -169,7 +169,7 @@ export default {
       }
     },
 
-   // 到达城市输入框失去焦点时候默认选中第一个城市
+    // 到达城市输入框失去焦点时候默认选中第一个城市
     loseDestSelect() {
       if (this.destData.length > 0) {
         this.form.destCity = this.destData[0].value
@@ -186,7 +186,11 @@ export default {
     },
 
     // 触发和目标城市切换时触发
-    handleReverse() {},
+    handleReverse() {
+      const { departCity, destCity } = this.form
+      this.form.departCity = destCity
+      this.form.destCity = departCity
+    },
 
     // 提交表单是触发
     handleSubmit() {
