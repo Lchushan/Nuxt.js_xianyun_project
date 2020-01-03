@@ -70,13 +70,39 @@ export default {
   },
   methods: {
     // 选择机场时候触发
-    handleAirport(value) {},
+    handleAirport(value) {
+      // 过滤条件的过滤后的数组
+      const arr = this.data.flights.filter(v => {
+        return value === v.org_airport_name
+      })
+      // 向父组件发送给请求
+      this.$emit('snendSelect', arr)
+    },
 
     // 选择出发时间时候触发
-    handleFlightTimes(value) {},
+    handleFlightTimes(value) {
+      let [from, to] = value.split(',')
+      // from = from + ':00'
+      // console.log(from)
+      // to = to + ':00'
+      // console.log(to)
+      // 过滤条件的过滤后的数组
+      const arr = this.data.flights.filter(v => {
+        return from + ':00' <= v.dep_time && v.dep_time < to + ':00'
+      })
+      // 向父组件发送给请求
+      this.$emit('snendSelect', arr)
+    },
 
     // 选择航空公司时候触发
-    handleCompany(value) {},
+    handleCompany(value) {
+      // 过滤条件的过滤后的数组
+      const arr = this.data.flights.filter(v => {
+        return value === v.airline_name
+      })
+      // 向父组件发送给请求
+      this.$emit('snendSelect', arr)
+    },
 
     // 选择机型时候触发
     handleAirSize(value) {},
@@ -85,7 +111,7 @@ export default {
     handleFiltersCancel() {}
   },
   mounted() {
-    console.log(this.data)
+    // console.log(this.data)
   }
 }
 </script>

@@ -4,7 +4,7 @@
       <!-- 顶部过滤列表 -->
       <div class="flights-content">
         <!-- 过滤条件 -->
-        <FlightsFilters :data="flightsData" />
+        <FlightsFilters :data="cacheFlightsData" @snendSelect="snendSelect" />
 
         <!-- 航班头部布局 -->
         <FlightsListHead />
@@ -47,7 +47,11 @@ export default {
         options: {}
       },
       // 缓存的变量，当该变量一旦被赋值之后不会被修改
-      cacheFlightsData: {},
+      cacheFlightsData: {
+        flights: [],
+        info: {},
+        options: {}
+      },
       // 当前的页面
       pageIndex: 1,
       // 当然的条数
@@ -89,13 +93,21 @@ export default {
     })
   },
   methods: {
+    // 修改分页条码当前页面显示的条数
     handleSizeChange(val) {
       this.pageSize = val
-      // console.log(`每页 ${val} 条`)
     },
+    //修改分页条码的当前页码
     handleCurrentChange(val) {
       this.pageIndex = val
-      // console.log(`当前页: ${val}`)
+    },
+
+    // 点击过滤条件上的下拉选择触发的事件
+    snendSelect(arr) {
+      // 将过滤后的数组赋值给this.flightsData.flights，这是computers监听的dataList值就会重新计算
+      this.flightsData.flights = arr
+      // 经过筛选，列表的条数页需要重新赋值
+      this.total = arr.length
     }
   }
 }
