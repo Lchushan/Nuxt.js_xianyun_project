@@ -122,7 +122,15 @@ export default {
     },
 
     // 撤销条件时候触发
-    handleFiltersCancel() {}
+    handleFiltersCancel() {
+      // 格式化
+      this.airport = ''
+      this.flightTimes = ''
+      this.company = ''
+      this.airSize = ''
+      // 向父组件发送给请求
+      this.$emit('snendSelect', this.data.flights)
+    }
   },
   mounted() {
     // console.log(this.data)
