@@ -39,7 +39,12 @@
       </el-col>
       <el-col :span="4">
         <el-select size="mini" v-model="airSize" placeholder="机型" @change="handleAirSize">
-          <el-option label="大" value="大"></el-option>
+          <el-option
+            :label="item.label"
+            :value="item.value"
+            v-for="(item,index) in flightSize"
+            :key="index"
+          ></el-option>
         </el-select>
       </el-col>
     </el-row>
@@ -65,7 +70,13 @@ export default {
       airport: '', // 机场
       flightTimes: '', // 出发时间
       company: '', // 航空公司
-      airSize: '' // 机型大小
+      airSize: '', // 机型大小
+      // 飞机的大小
+      flightSize: [
+        { label: '大', value: 'L' },
+        { label: '中', value: 'M' },
+        { label: '小', value: 'S' }
+      ]
     }
   },
   methods: {
@@ -82,10 +93,6 @@ export default {
     // 选择出发时间时候触发
     handleFlightTimes(value) {
       let [from, to] = value.split(',')
-      // from = from + ':00'
-      // console.log(from)
-      // to = to + ':00'
-      // console.log(to)
       // 过滤条件的过滤后的数组
       const arr = this.data.flights.filter(v => {
         return from + ':00' <= v.dep_time && v.dep_time < to + ':00'
@@ -105,7 +112,14 @@ export default {
     },
 
     // 选择机型时候触发
-    handleAirSize(value) {},
+    handleAirSize(value) {
+      // 过滤条件的过滤后的数组
+      const arr = this.data.flights.filter(v => {
+        return value === v.plane_size
+      })
+      // 向父组件发送给请求
+      this.$emit('snendSelect', arr)
+    },
 
     // 撤销条件时候触发
     handleFiltersCancel() {}
