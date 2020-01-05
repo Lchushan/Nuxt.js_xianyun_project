@@ -94,8 +94,13 @@ export default {
     handleFlightTimes(value) {
       let [from, to] = value.split(',')
       // 过滤条件的过滤后的数组
+      console.log(from)
+      console.log(to)
       const arr = this.data.flights.filter(v => {
-        return from + ':00' <= v.dep_time && v.dep_time < to + ':00'
+        const middle =
+          +v.dep_time.split(':')[0] + +(v.dep_time.split(':')[1] / 60)
+        console.log(middle)
+        return from <= middle && middle < to
       })
       // 向父组件发送给请求
       this.$emit('snendSelect', arr)
