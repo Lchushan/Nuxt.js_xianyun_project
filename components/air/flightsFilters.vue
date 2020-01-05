@@ -8,7 +8,7 @@
         {{data.info.departDate}}
       </el-col>
       <el-col :span="4">
-        <el-select size="mini" v-model="airport" placeholder="起飞机场" @change="handleAirport">
+        <el-select size="mini" v-model="airport" placeholder="起飞机场">
           <el-option
             :label="item"
             :value="item"
@@ -18,7 +18,7 @@
         </el-select>
       </el-col>
       <el-col :span="4">
-        <el-select size="mini" v-model="flightTimes" placeholder="起飞时间" @change="handleFlightTimes">
+        <el-select size="mini" v-model="flightTimes" placeholder="起飞时间">
           <el-option
             :label="`${item.from}:00 - ${item.to}:00`"
             :value="`${item.from},${item.to}`"
@@ -28,7 +28,7 @@
         </el-select>
       </el-col>
       <el-col :span="4">
-        <el-select size="mini" v-model="company" placeholder="航空公司" @change="handleCompany">
+        <el-select size="mini" v-model="company" placeholder="航空公司">
           <el-option
             :label="item"
             :value="item"
@@ -38,7 +38,7 @@
         </el-select>
       </el-col>
       <el-col :span="4">
-        <el-select size="mini" v-model="airSize" placeholder="机型" @change="handleAirSize">
+        <el-select size="mini" v-model="airSize" placeholder="机型">
           <el-option
             :label="item.label"
             :value="item.value"
@@ -52,6 +52,8 @@
       筛选：
       <el-button type="primary" round plain size="mini" @click="handleFiltersCancel">撤销</el-button>
     </div>
+    <!-- 随便调用为了函数可以执行 -->
+    <span>{{filterData}}</span>
   </div>
 </template>
 
@@ -79,52 +81,90 @@ export default {
       ]
     }
   },
+  computed: {
+    filterData() {
+      const arr = this.data.flights.filter(v => {
+        let valid = true
+        // 机场
+        if (this.airport && this.airport !== v.org_airport_name) {
+          valid = false
+        }
+
+        // 出发时间
+        if (this.flightTimes) {
+          let [from, to] = this.flightTimes.split(',')
+          const middle =
+            +v.dep_time.split(':')[0] + +(v.dep_time.split(':')[1] / 60)
+          if (from > middle || to < middle) {
+            valid = false
+          }
+        }
+
+        // 航空公司
+        if (this.company && this.company !== v.airline_name) {
+          valid = false
+        }
+
+        // 机型大小
+        if (this.airSize && this.airSize !== v.plane_size) {
+          valid = false
+        }
+        return valid
+      })
+
+      // console.log(arr)
+      this.$emit('snendSelect', arr)
+
+      return ''
+    }
+  },
   methods: {
-    // 选择机场时候触发
-    handleAirport(value) {
-      // 过滤条件的过滤后的数组
-      const arr = this.data.flights.filter(v => {
-        return value === v.org_airport_name
-      })
-      // 向父组件发送给请求
-      this.$emit('snendSelect', arr)
-    },
+    // // 选择机场时候触发
+    // handleAirport(value) {
+    //   // 过滤条件的过滤后的数组
+    //   const arr = this.data.flights.filter(v => {
+    //     return value === v.org_airport_name
+    //   })
+    //   // 向父组件发送给请求
+    //   this.$emit('snendSelect', arr)
+    //   console.log(this.filterData)
+    // },
 
-    // 选择出发时间时候触发
-    handleFlightTimes(value) {
-      let [from, to] = value.split(',')
-      // 过滤条件的过滤后的数组
-      console.log(from)
-      console.log(to)
-      const arr = this.data.flights.filter(v => {
-        const middle =
-          +v.dep_time.split(':')[0] + +(v.dep_time.split(':')[1] / 60)
-        console.log(middle)
-        return from <= middle && middle < to
-      })
-      // 向父组件发送给请求
-      this.$emit('snendSelect', arr)
-    },
+    // // 选择出发时间时候触发
+    // handleFlightTimes(value) {
+    //   let [from, to] = value.split(',')
+    //   // 过滤条件的过滤后的数组
+    //   console.log(from)
+    //   console.log(to)
+    //   const arr = this.data.flights.filter(v => {
+    //     const middle =
+    //       +v.dep_time.split(':')[0] + +(v.dep_time.split(':')[1] / 60)
+    //     console.log(middle)
+    //     return from <= middle && middle < to
+    //   })
+    //   // 向父组件发送给请求
+    //   this.$emit('snendSelect', arr)
+    // },
 
-    // 选择航空公司时候触发
-    handleCompany(value) {
-      // 过滤条件的过滤后的数组
-      const arr = this.data.flights.filter(v => {
-        return value === v.airline_name
-      })
-      // 向父组件发送给请求
-      this.$emit('snendSelect', arr)
-    },
+    // // 选择航空公司时候触发
+    // handleCompany(value) {
+    //   // 过滤条件的过滤后的数组
+    //   const arr = this.data.flights.filter(v => {
+    //     return value === v.airline_name
+    //   })
+    //   // 向父组件发送给请求
+    //   this.$emit('snendSelect', arr)
+    // },
 
-    // 选择机型时候触发
-    handleAirSize(value) {
-      // 过滤条件的过滤后的数组
-      const arr = this.data.flights.filter(v => {
-        return value === v.plane_size
-      })
-      // 向父组件发送给请求
-      this.$emit('snendSelect', arr)
-    },
+    // // 选择机型时候触发
+    // handleAirSize(value) {
+    //   // 过滤条件的过滤后的数组
+    //   const arr = this.data.flights.filter(v => {
+    //     return value === v.plane_size
+    //   })
+    //   // 向父组件发送给请求
+    //   this.$emit('snendSelect', arr)
+    // },
 
     // 撤销条件时候触发
     handleFiltersCancel() {
