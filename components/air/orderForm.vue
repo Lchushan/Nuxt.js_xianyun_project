@@ -2,10 +2,10 @@
   <div class="main">
     <div class="air-column">
       <h2>剩机人</h2>
-      <el-form class="member-info">
+      <el-form class="member-info" v-for="(item ,index) in users" :key="index">
         <div class="member-info-item">
           <el-form-item label="乘机人类型">
-            <el-input placeholder="姓名" class="input-with-select">
+            <el-input placeholder="姓名" class="input-with-select" v-model="item.username">
               <el-select slot="prepend" value="1" placeholder="请选择">
                 <el-option label="成人" value="1"></el-option>
               </el-select>
@@ -13,7 +13,7 @@
           </el-form-item>
 
           <el-form-item label="证件类型">
-            <el-input placeholder="证件号码" class="input-with-select">
+            <el-input placeholder="证件号码" class="input-with-select" v-model="item.id">
               <el-select slot="prepend" value="1" placeholder="请选择">
                 <el-option label="身份证" value="1" :checked="true"></el-option>
               </el-select>
@@ -64,9 +64,28 @@
 
 <script>
 export default {
+  data() {
+    return {
+      // 乘机人的数组
+      users: [
+        {
+          username: '',
+          id: ''
+        }
+      ]
+    }
+  },
   methods: {
     // 添加乘机人
-    handleAddUsers() {},
+    handleAddUsers() {
+      this.users = [
+        ...this.users,
+        {
+          username: '',
+          id: ''
+        }
+      ]
+    },
 
     // 移除乘机人
     handleDeleteUser() {},
@@ -75,7 +94,9 @@ export default {
     handleSendCaptcha() {},
 
     // 提交订单
-    handleSubmit() {}
+    handleSubmit() {
+      console.log(this.users)
+    }
   }
 }
 </script>
