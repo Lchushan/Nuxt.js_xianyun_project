@@ -2,8 +2,8 @@
   <div class="main">
     <div class="air-column">
       <h2>剩机人</h2>
-      <el-form class="member-info" v-for="(item ,index) in users" :key="index">
-        <div class="member-info-item">
+      <el-form class="member-info">
+        <div class="member-info-item" v-for="(item ,index) in users" :key="index">
           <el-form-item label="乘机人类型">
             <el-input placeholder="姓名" class="input-with-select" v-model="item.username">
               <el-select slot="prepend" value="1" placeholder="请选择">
@@ -20,7 +20,7 @@
             </el-input>
           </el-form-item>
 
-          <span class="delete-user" @click="handleDeleteUser()">-</span>
+          <span class="delete-user" @click="handleDeleteUser(index)">-</span>
         </div>
       </el-form>
 
@@ -30,8 +30,12 @@
     <div class="air-column">
       <h2>保险</h2>
       <div>
-        <div class="insurance-item">
-          <el-checkbox label="航空意外险：￥30/份×1  最高赔付260万" border></el-checkbox>
+        <div class="insurance-item" v-for="(item,index) in data.insurances" :key="index">
+          <el-checkbox
+            :label="`${item.type}：￥${item.price}/份×${users.length}  最高赔付${item.compensation}`"
+            border
+            @change="handleInsurance(item.id)"
+          ></el-checkbox>
         </div>
       </div>
     </div>
@@ -41,11 +45,11 @@
       <div class="contact">
         <el-form label-width="60px">
           <el-form-item label="姓名">
-            <el-input></el-input>
+            <el-input v-model="contactName"></el-input>
           </el-form-item>
 
           <el-form-item label="手机">
-            <el-input placeholder="请输入内容">
+            <el-input placeholder="请输入内容" v-model="contactPhone">
               <template slot="append">
                 <el-button @click="handleSendCaptcha">发送验证码</el-button>
               </template>
@@ -53,7 +57,7 @@
           </el-form-item>
 
           <el-form-item label="验证码">
-            <el-input></el-input>
+            <el-input v-model="captcha"></el-input>
           </el-form-item>
         </el-form>
         <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
@@ -64,6 +68,13 @@
 
 <script>
 export default {
+  props: {
+    // 接收机票信息
+    data: {
+      type: Object,
+      default: {}
+    }
+  },
   data() {
     return {
       // 乘机人的数组
@@ -72,7 +83,12 @@ export default {
           username: '',
           id: ''
         }
-      ]
+      ],
+      insurances: [], // 保险数据
+      contactName: '', // 联系人名字
+      contactPhone: '', // 联系人电话
+      captcha: '000000', // 验证码
+      invoice: false // 发票
     }
   },
   methods: {
@@ -88,14 +104,40 @@ export default {
     },
 
     // 移除乘机人
-    handleDeleteUser() {},
+    handleDeleteUser(index) {
+      this.users.splice(index, 1)
+    },
+
+    // 选择保险
+    handleInsurance(id) {
+      // this.insurances.indexOf(id)：判断this.insurances是否有id值
+      //存在即去除
+      if (this.insurances.indexOf(id) > -1) {
+        //this.insurances 中有值id，说明重复点击，需要去除
+        let arr = this.insurances.slice(0)
+        arr.splice(this.insurances.indexOf(id), 1)
+        this.insurances = arr
+      } else {
+        //this.insurances 中无值id
+        // new Set：实现去重；使用格式 [ new Set(数组/对象)]
+        this.insurances = [...new Set([...this.insurances, id])]
+      }
+    },
 
     // 发送手机验证码
     handleSendCaptcha() {},
 
     // 提交订单
     handleSubmit() {
-      console.log(this.users)
+      const orderData = {
+        users: this.users,
+        insurances: this.insurances,
+        contactName: this.contactName,
+        contactPhone: this.contactPhone,
+        captcha: this.captcha,
+        invoice: this.invoice
+      }
+      console.log(orderData)
     }
   }
 }
