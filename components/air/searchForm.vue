@@ -227,6 +227,14 @@ export default {
       // 判断valid为false，就不再进行以下操作
       if (valid === false) return
 
+      // 添加记录到本地
+      // 读取本地的记录
+      let airs = JSON.parse(window.localStorage.getItem('airs') || `[]`)
+      // 前添加读取的记录
+      airs.push(this.form)
+      // 把记录储存到本地，覆盖之前的数据
+      window.localStorage.setItem('airs', JSON.stringify(airs))
+
       // 跳转到机票的列表页
       this.$router.push({
         path: '/air/flights',

@@ -62,6 +62,25 @@ export default {
       total: 0
     }
   },
+  watch: {
+    $route() {
+      // 重新根据栏目上的数据生成数据
+      this.$axios({
+        url: '/airs',
+        params: this.$route.query
+      }).then(res => {
+        // 将数据赋值flightsData
+        this.flightsData = res.data
+        // console.log(this.flightsData.flights)
+        // 这个是缓存的变量，一旦赋值之后不能被改
+        this.cacheFlightsData = { ...res.data }
+        // 获取总条数total
+        this.total = this.flightsData.total
+        // 分页初始化为1
+        this.pageIndex = 1
+      })
+    }
+  },
   components: {
     FlightsListHead,
     FlightsItem,
