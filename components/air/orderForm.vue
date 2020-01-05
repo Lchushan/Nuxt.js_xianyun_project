@@ -125,7 +125,18 @@ export default {
     },
 
     // 发送手机验证码
-    handleSendCaptcha() {},
+    handleSendCaptcha() {
+      // 判断手机号码不能为空
+      if (this.contactPhone === '') {
+        this.$message.error('手机号码不能为空')
+        return
+      }
+      //发送请求获取手机验证码
+      this.$store.dispatch('user/sendCaptcha', this.contactPhone).then(res => {
+        //成功获取到验证码
+        this.$message.success('验证码：' + res.data.code)
+      })
+    },
 
     // 提交订单
     handleSubmit() {
