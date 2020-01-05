@@ -140,15 +140,53 @@ export default {
 
     // 提交订单
     handleSubmit() {
+      // 表单数据拼接
       const orderData = {
-        users: this.users,
-        insurances: this.insurances,
-        contactName: this.contactName,
-        contactPhone: this.contactPhone,
-        captcha: this.captcha,
-        invoice: this.invoice
+        users: this.users, //用户列表
+        insurances: this.insurances, //保险id
+        contactName: this.contactName, //联系人名字
+        contactPhone: this.contactPhone, //联系人电话
+        captcha: this.captcha, //手机验证码
+        invoice: this.invoice, //是否需要发票
+        seat_xid: this.data.seat_infos.seat_xid, //作为id
+        air: this.data.id //航班id
       }
-      console.log(orderData)
+
+      // 订单生成成功，告诉用户
+      this.$message({
+        message: '正在生成订单！请稍等',
+        type: 'success'
+      })
+
+      // 获取token值
+      const {
+        user: { userInfo }
+      } = this.$store.state
+
+      // 发送生成订单请求
+      this.$axios({
+        method: 'post',
+        url: '/airorders',
+        data: orderData,
+        headers: {
+          Authorization: `Bearer ${userInfo.token || 'NO TOKEN'}`
+        }
+      })
+        .then(res => {
+          // 跳转到付款页
+          this.$router.push({
+            path: '/air/pay'
+          })
+        })
+        .catch(err => {
+          const { message } = err.response.data
+          // 警告提示
+          this.$confirm(message, '提示', {
+            confirmButtonText: '确定',
+            showCancelButton: false,
+            type: 'warning'
+          })
+        })
     }
   }
 }
