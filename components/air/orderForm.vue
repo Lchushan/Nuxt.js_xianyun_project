@@ -63,6 +63,8 @@
         <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
       </div>
     </div>
+    <!-- 隐藏域，为了computed中的属性 allPrice 能触发 -->
+    <input type="hidden" :value="allPrice" />
   </div>
 </template>
 
@@ -89,6 +91,31 @@ export default {
       contactPhone: '', // 联系人电话
       captcha: '000000', // 验证码
       invoice: false // 发票
+    }
+  },
+  computed: {
+    // 计算总价格
+    allPrice() {
+      // 初始化，总价钱为0
+      let price = 0
+      // len：乘机人的人数
+      let len = this.users.length
+
+      // 乘机人的总机票钱 = 单价 * 人数
+      price += this.data.seat_infos.org_settle_price * len
+
+      // 保险总价 = 一个人买的保险钱 * 人数
+      this.insurances.forEach(v => {
+        price += this.data.insurances[v - 1].price * len
+      })
+
+      // 飞机既有费 = 个人的油费 * 人数
+      price += this.data.airport_tax_audlet * len
+
+      // 触发设置总金额事件（发送给父组件，把价格price传送给侧边栏组件）
+      this.$emit('setAllPrice', price)
+
+      return price
     }
   },
   methods: {
