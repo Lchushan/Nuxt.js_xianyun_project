@@ -200,9 +200,15 @@ export default {
         }
       })
         .then(res => {
+          const {
+            data: { id }
+          } = res.data
           // 跳转到付款页
           this.$router.push({
-            path: '/air/pay'
+            path: '/air/pay',
+            query: {
+              id
+            }
           })
         })
         .catch(err => {
