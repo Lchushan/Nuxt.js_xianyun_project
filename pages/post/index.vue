@@ -4,6 +4,7 @@
     <div class="layout">
       <!-- 左侧栏 -->
       <div width="200px" class="aside">
+        <!-- 左侧的导航 -->
         <div class="menus-body">
           <!-- 主体 -->
           <div class="menus">
@@ -65,6 +66,14 @@
             </ul>
           </div>
         </div>
+        <!-- 左侧的推荐城市 -->
+        <div class="aside-recommend">
+          <h4 class="aside-title">推荐城市</h4>
+          <a href="#" class="aside-recommend-item">
+            <!-- <img data-v-053600ae="" src=""> -->
+            <img src='/images/pic_sea.jpeg' alt />
+          </a>
+        </div>
       </div>
       <!-- 主体 -->
       <div class="main">Main</div>
@@ -92,7 +101,6 @@ export default {
   .layout {
     position: relative;
     height: 100%;
-    background-color: gold;
     .aside {
       position: absolute;
       top: 0;
@@ -101,10 +109,8 @@ export default {
       .menus-body {
         position: relative;
         height: 165px;
-        background-color: green;
         .menus {
           height: 164px;
-          background-color: #fff;
           border-left: 1px solid #ddd;
           border-top: 1px solid #ddd;
           .menus-item {
@@ -158,6 +164,25 @@ export default {
                 color: #999;
               }
             }
+          }
+        }
+      }
+      .aside-recommend {
+        margin-top: 20px;
+        .aside-title {
+          margin-bottom: 10px;
+          padding-bottom: 10px;
+          font-size: 16px;
+          font-weight: normal;
+          border-bottom: 1px solid #ddd;
+        }
+        .aside-recommend-item {
+          width: 100%;
+          height: 170px;
+          img {
+            width: 100%;
+            height: 170px;
+            background-color: pink;
           }
         }
       }
