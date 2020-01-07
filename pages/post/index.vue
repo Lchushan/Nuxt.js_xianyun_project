@@ -95,9 +95,19 @@
           <h4>推荐攻略</h4>
           <el-button type="primary" icon="el-icon-edit">写游记</el-button>
         </div>
-        <!-- 文章内容 -->
+        <!-- 文章列表 -->
         <div class="post-list"></div>
         <PostList />
+        <!-- 分页模块 -->
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="[100, 200, 300, 400]"
+          :page-size="100"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="400"
+        ></el-pagination>
       </div>
     </div>
   </div>
@@ -109,11 +119,20 @@ import PostList from '@/components/post/postList'
 export default {
   data() {
     return {
-      isShow: false
+      isShow: false,
+      currentPage: 1
     }
   },
   components: {
     PostList
+  },
+  methods: {
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`)
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`)
+    }
   }
 }
 </script>
