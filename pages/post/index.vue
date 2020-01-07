@@ -71,12 +71,33 @@
           <h4 class="aside-title">推荐城市</h4>
           <a href="#" class="aside-recommend-item">
             <!-- <img data-v-053600ae="" src=""> -->
-            <img src='/images/pic_sea.jpeg' alt />
+            <img src="/images/pic_sea.jpeg" alt />
           </a>
         </div>
       </div>
       <!-- 主体 -->
-      <div class="main">Main</div>
+      <div class="main">
+        <!-- 搜索 -->
+        <div class="search">
+          <div class="serach-inputs">
+            <input type="text" class="search-input" placeholder="请输入想去的地方，比如：'广州'" value="北京" />
+            <i class="el-icon-search"></i>
+          </div>
+          <div class="search-recommend">
+            推荐：
+            <span>广州</span>
+            <span>上海</span>
+            <span>北京</span>
+          </div>
+        </div>
+        <!-- 文章主题 -->
+        <div class="post-title">
+          <h4>推荐攻略</h4>
+          <el-button type="primary" icon="el-icon-edit">写游记</el-button>
+        </div>
+        <!-- 文章内容 -->
+        <div class="post-container"></div>
+      </div>
     </div>
   </div>
   <!-- </div> -->
@@ -193,7 +214,61 @@ export default {
       right: 0;
       width: 700px;
       height: 100%;
-      background-color: blue;
+      // background-color: blue;
+      .search {
+        width: 700px;
+        // height: 40px;
+        background-color: #fff;
+        .serach-inputs {
+          display: flex;
+          width: 100%;
+          border: 2px solid #ffa500;
+          box-sizing: border-box;
+          .search-input {
+            padding: 0 20px;
+            flex: 1;
+            height: 40px;
+            border: none;
+          }
+          .el-icon-search {
+            margin-right: 10px;
+            font-size: 24px;
+            color: #ffa500;
+            line-height: 40px;
+          }
+        }
+        .search-recommend {
+          padding: 10px;
+          font-size: 12px;
+          color: #666;
+        }
+      }
+      .post-title {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 10px;
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        border-bottom: 1px solid #ddd;
+        background-color: #fff;
+        h4 {
+          font: 18px 'Source Sans Pro';
+          color: #ffa500;
+          &::after {
+            display: block;
+            content: '';
+            width: 72px;
+            height: 2px;
+            background: #ffa500;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+          }
+        }
+      }
     }
   }
 }
