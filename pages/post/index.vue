@@ -96,7 +96,8 @@
           <el-button type="primary" icon="el-icon-edit">写游记</el-button>
         </div>
         <!-- 文章内容 -->
-        <div class="post-container"></div>
+        <div class="post-list"></div>
+        <PostList />
       </div>
     </div>
   </div>
@@ -104,11 +105,15 @@
 </template>
 
 <script>
+import PostList from '@/components/post/postList'
 export default {
   data() {
     return {
       isShow: false
     }
+  },
+  components: {
+    PostList
   }
 }
 </script>
