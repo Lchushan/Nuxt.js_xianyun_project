@@ -8,11 +8,17 @@
         <div class="menus-body">
           <!-- 主体 -->
           <div class="menus">
-            <div class="menus-item" @mouseenter="isShow=true" @mouseleave="isShow=false">
-              热门城市
+            <div
+              class="menus-item"
+              @mouseenter="showList(item.children)"
+              @mouseleave="isShow=false"
+              v-for="(item,index) in citiesList"
+              :key="index"
+            >
+              {{item.type}}
               <i class="el-icon-arrow-right"></i>
             </div>
-            <div class="menus-item">
+            <!-- <div class="menus-item">
               推荐城市
               <i class="el-icon-arrow-right"></i>
             </div>
@@ -23,19 +29,19 @@
             <div class="menus-item">
               主体推荐
               <i class="el-icon-arrow-right"></i>
-            </div>
+            </div> -->
           </div>
           <!-- 浮动布局 -->
           <div class="sub-munes" v-if="isShow">
             <ul>
-              <li class="sub-munes-item">
+              <li class="sub-munes-item" v-for="(item,index) in citiesChildrenList" :key="index">
                 <a href="#">
-                  <i>1</i>
-                  <strong>北京</strong>
-                  <span>世界著名古都和现代化国际城市</span>
+                  <i>{{index+1}}</i>
+                  <strong>{{item.city}}</strong>
+                  <span>{{item.desc}}</span>
                 </a>
               </li>
-              <li class="sub-munes-item">
+              <!-- <li class="sub-munes-item">
                 <a href="#">
                   <i>2</i>
                   <strong>广州</strong>
@@ -62,7 +68,7 @@
                   <strong>西安</strong>
                   <span>中国国际形象最佳城市之一</span>
                 </a>
-              </li>
+              </li> -->
             </ul>
           </div>
         </div>
@@ -119,6 +125,8 @@ import PostList from '@/components/post/postList'
 export default {
   data() {
     return {
+      citiesList: [],
+      citiesChildrenList:[],
       isShow: false,
       currentPage: 1
     }
@@ -127,12 +135,26 @@ export default {
     PostList
   },
   methods: {
+    showList(data){
+      this.isShow=true
+      this.citiesChildrenList=data
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`)
     }
+  },
+  mounted() {
+    this.$axios({
+      url: '/posts/cities'
+    }).then(res => {
+      if (res.status === 200) {
+        this.citiesList = res.data.data
+        console.log(this.citiesList)
+      }
+    })
   }
 }
 </script>
