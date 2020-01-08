@@ -1,21 +1,20 @@
 <template>
   <!-- 文章格式1 -->
-  <div class="post-list1" v-if="isNum==='1'">
-    <!-- <div class="post-list1"> -->
-    <h4>塞班贵？一定是你的打开方式不对！6000块玩转塞班</h4>
-    <p>大家对塞班岛总存在着这样的误解，知道他是美食地盘，就理所当然的觉得这里的花费一定很高，花费高有高的玩法，那如果只有6000块的预算呢？要怎么完？大家对塞班岛总存在着这样的误解，知道他是美食地盘，就理所当然的觉得这里的花费一定很高，花费高有高的玩法，那如果只有6000块的预算呢？要怎么完？大家对塞班岛总存在着这样的误解，知道他是美食地盘，就理所当然的觉得这里的花费一定很高，花费高有高的玩法，那如果只有6000块的预算呢？要怎么完？</p>
+  <div class="post-list1" v-if="data.images.length>2">
+    <h4>{{data.title}}</h4>
+    <p v-html="data.summary"></p>
     <div class="post-imgs">
-      <img src="/images/pic_sea.jpeg" alt />
-      <img src="/images/pic_sea.jpeg" alt />
-      <img src="/images/pic_sea.jpeg" alt />
+      <img :src="data.images[0]" alt />
+      <img :src="data.images[1]" alt />
+      <img :src="data.images[2]" alt />
     </div>
     <div class="post-info">
       <div class="post-info-left">
         <span>
-          <i class="el-icon-location-outline"></i>北京市 by
+          <i class="el-icon-location-outline"></i>{{data.cityName}} by
         </span>
         <span class="post-info-user">
-          <img src="/images/pic_sea.jpeg" alt /> 地球发动机
+          <img :src="data.account.defaultAvatar" alt /> {{data.account.nickname}}
         </span>
         <span>
           <i class="el-icon-view"></i> 12833
@@ -25,21 +24,20 @@
     </div>
   </div>
   <!-- 文章格式2 -->
-  <div class="post-list2" v-else-if="isNum==='2'">
-    <!-- <div class="post-list2"> -->
+  <div class="post-list2" v-else-if="data.images.length<2">
     <div class="img">
-      <img src="/images/pic_sea.jpeg" alt />
+      <img :src="data.images[0]" alt />
     </div>
     <div class="post-container">
-      <h4>塞班贵？一定是你的打开方式不对！6000块玩转塞班</h4>
-      <p>大家对塞班岛总存在着这样的误解，知道他是美食地盘，就理所当然的觉得这里的花费一定很高，花费高有高的玩法，那如果只有6000块的预算呢？要怎么完？</p>
+      <h4>{{data.title}}</h4>
+      <p v-html="data.summary"></p>
       <div class="post-info">
         <div class="post-info-left">
           <span>
-            <i class="el-icon-location-outline"></i>北京市 by
+            <i class="el-icon-location-outline"></i>{{data.cityName}} by
           </span>
           <span class="post-info-user">
-            <img src="/images/pic_sea.jpeg" alt /> 地球发动机
+            <img :src="data.account.defaultAvatar" alt /> {{data.account.nickname}}
           </span>
           <span>
             <i class="el-icon-view"></i> 12833
@@ -53,10 +51,14 @@
 
 <script>
 export default {
+  props: ['data'],
   data() {
     return {
       isNum: '1'
     }
+  },
+  mounted(){
+    // data.account.defaultAvatar=window.localStorage.getItem('')+data.account.defaultAvatar
   }
 }
 </script>

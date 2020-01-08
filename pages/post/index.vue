@@ -5,31 +5,18 @@
       <!-- 左侧栏 -->
       <div width="200px" class="aside">
         <!-- 左侧的导航 -->
-        <div class="menus-body">
+        <div class="menus-body" @mouseleave="toggleList">
           <!-- 主体 -->
           <div class="menus">
             <div
               class="menus-item"
-              @mouseenter="showList(item.children)"
-              @mouseleave="isShow=false"
+              @mouseenter="showList(item.children,index)"
               v-for="(item,index) in citiesList"
               :key="index"
             >
               {{item.type}}
               <i class="el-icon-arrow-right"></i>
             </div>
-            <!-- <div class="menus-item">
-              推荐城市
-              <i class="el-icon-arrow-right"></i>
-            </div>
-            <div class="menus-item">
-              奔向海岛
-              <i class="el-icon-arrow-right"></i>
-            </div>
-            <div class="menus-item">
-              主体推荐
-              <i class="el-icon-arrow-right"></i>
-            </div> -->
           </div>
           <!-- 浮动布局 -->
           <div class="sub-munes" v-if="isShow">
@@ -41,34 +28,6 @@
                   <span>{{item.desc}}</span>
                 </a>
               </li>
-              <!-- <li class="sub-munes-item">
-                <a href="#">
-                  <i>2</i>
-                  <strong>广州</strong>
-                  <span>粤澳港大湾区/反珠江三角洲经济区</span>
-                </a>
-              </li>
-              <li class="sub-munes-item">
-                <a href="#">
-                  <i>3</i>
-                  <strong>上海</strong>
-                  <span>长江入海口，东隔东中国海</span>
-                </a>
-              </li>
-              <li class="sub-munes-item">
-                <a href="#">
-                  <i>4</i>
-                  <strong>成都</strong>
-                  <span>国家历史文化名称</span>
-                </a>
-              </li>
-              <li class="sub-munes-item">
-                <a href="#">
-                  <i>5</i>
-                  <strong>西安</strong>
-                  <span>中国国际形象最佳城市之一</span>
-                </a>
-              </li> -->
             </ul>
           </div>
         </div>
@@ -91,9 +50,7 @@
           </div>
           <div class="search-recommend">
             推荐：
-            <span>广州</span>
-            <span>上海</span>
-            <span>北京</span>
+            <span class="mouseEnter" v-for="(item,index) in recoCities" :key="index">{{item}}</span>
           </div>
         </div>
         <!-- 文章主题 -->
@@ -103,16 +60,16 @@
         </div>
         <!-- 文章列表 -->
         <div class="post-list"></div>
-        <PostList />
+        <PostList :data="item" v-for="(item,index) in postsList.data" :key="index" />
         <!-- 分页模块 -->
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="currentPage"
-          :page-sizes="[100, 200, 300, 400]"
+          :page-sizes="[3, 6, 9, 12]"
           :page-size="100"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="400"
+          :total="postsList.total"
         ></el-pagination>
       </div>
     </div>
@@ -126,18 +83,34 @@ export default {
   data() {
     return {
       citiesList: [],
-      citiesChildrenList:[],
+      citiesChildrenList: [],
       isShow: false,
-      currentPage: 1
+      currentPage: 1,
+      postsList: [],
+      recoCities:['广州','上海','北京'],
     }
   },
   components: {
     PostList
   },
   methods: {
-    showList(data){
-      this.isShow=true
-      this.citiesChildrenList=data
+    // 鼠标移在左侧导航上
+    showList(data, index) {
+      this.isShow = true
+      this.citiesChildrenList = data
+      const num = document.querySelectorAll('.menus-item')
+      for (let i = 0; i < num.length; i++) {
+        num[i].classList.remove('show')
+      }
+      document.querySelectorAll('.menus-item')[index].classList.add('show')
+    },
+    // 鼠标移开左侧导航上
+    toggleList() {
+      const num = document.querySelectorAll('.menus-item')
+      for (let i = 0; i < num.length; i++) {
+        num[i].classList.remove('show')
+      }
+      this.isShow = false
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
@@ -147,14 +120,22 @@ export default {
     }
   },
   mounted() {
+    // 获取导航上的旅游列表
     this.$axios({
       url: '/posts/cities'
     }).then(res => {
       if (res.status === 200) {
         this.citiesList = res.data.data
-        console.log(this.citiesList)
+        // console.log(this.citiesList)
       }
-    })
+    }),
+      // 获取文章列表
+      this.$axios({
+        url: '/posts'
+      }).then(res => {
+        this.postsList = res.data
+        console.log(this.postsList)
+      })
   }
 }
 </script>
@@ -164,14 +145,10 @@ export default {
   margin: 0 auto;
   padding: 30px 0;
   width: 1000px;
-  height: 1000px;
   .layout {
-    position: relative;
-    height: 100%;
+    display: flex;
+    justify-content: space-between;
     .aside {
-      position: absolute;
-      top: 0;
-      left: 0;
       width: 260px !important;
       .menus-body {
         position: relative;
@@ -188,7 +165,7 @@ export default {
             border-right: 1px solid #ddd;
             border-bottom: 1px solid #ddd;
             z-index: 3;
-            &:hover {
+            &.show {
               border-right-color: #fff;
               color: #ffa500;
             }
@@ -226,9 +203,15 @@ export default {
               }
               strong {
                 margin: 0 10px;
+                &:hover {
+                  border-bottom: 1px solid #ffa500;
+                }
               }
               span {
                 color: #999;
+                &:hover {
+                  border-bottom: 1px solid #999;
+                }
               }
             }
           }
@@ -255,12 +238,7 @@ export default {
       }
     }
     .main {
-      position: absolute;
-      top: 0;
-      right: 0;
       width: 700px;
-      height: 100%;
-      // background-color: blue;
       .search {
         width: 700px;
         // height: 40px;
@@ -275,6 +253,7 @@ export default {
             flex: 1;
             height: 40px;
             border: none;
+            outline: none;
           }
           .el-icon-search {
             margin-right: 10px;
@@ -287,6 +266,9 @@ export default {
           padding: 10px;
           font-size: 12px;
           color: #666;
+          span {
+            margin-right: 10px;
+          }
         }
       }
       .post-title {
@@ -317,5 +299,13 @@ export default {
       }
     }
   }
+}
+.el-pagination {
+  margin-top: 10px;
+}
+.mouseEnter:hover {
+  cursor: pointer;
+  color: #ffa500;
+  border-bottom: 1px solid #ffa500;
 }
 </style>
