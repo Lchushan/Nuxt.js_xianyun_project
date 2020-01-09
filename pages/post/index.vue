@@ -36,7 +36,7 @@
           <h4 class="aside-title">推荐城市</h4>
           <a href="#" class="aside-recommend-item" @click="$router.push({path:'/post'})">
             <!-- <img data-v-053600ae="" src=""> -->
-            <img src="/images/pic_sea.jpeg" alt />
+            <img :src="recommentCityImg" alt />
           </a>
         </div>
       </div>
@@ -45,8 +45,14 @@
         <!-- 搜索 -->
         <div class="search">
           <div class="serach-inputs">
-            <input type="text" class="search-input" placeholder="请输入想去的地方，比如：'广州'" value="北京" />
-            <i class="el-icon-search"></i>
+            <input
+              type="text"
+              class="search-input"
+              ref="searchInp"
+              placeholder="请输入想去的地方，比如：'广州'"
+              value="北京"
+            />
+            <i class="el-icon-search" @click="toSearchPost"></i>
           </div>
           <div class="search-recommend">
             推荐：
@@ -54,7 +60,7 @@
               class="mouseEnter"
               v-for="(item,index) in recoCities"
               :key="index"
-              @click="$router.push({path: `/post?city=${item}`})"
+              @click="toSearch(item)"
             >{{item}}</span>
           </div>
         </div>
@@ -92,8 +98,8 @@ export default {
       isShow: false,
       currentPage: 1,
       postsList: [],
-      recoCities: ['广州', '上海', '北京']
-      // city: ''
+      recoCities: ['广州', '上海', '北京'],
+      recommentCityImg: ''
     }
   },
   watch: {
@@ -136,12 +142,17 @@ export default {
         params: city
       }).then(res => {
         this.postsList = res.data
-        // console.log(this.postsList)
       })
     },
-    // 点击根据城市获取文章列表
-    toGetPostList(city) {
-      getPostList(city)
+    // 点击搜索按钮搜索城市
+    toSearchPost() {
+      // console.log(this.$refs.searchInp.value)
+      this.getPostList({ city: this.$refs.searchInp.value })
+    },
+    // 点击搜索框下的推荐
+    toSearch(item) {
+      this.$refs.searchInp.value = item
+      this.toSearchPost()
     },
     // 点击分页的每页条数
     handleSizeChange(val) {
@@ -159,14 +170,15 @@ export default {
     }).then(res => {
       if (res.status === 200) {
         this.citiesList = res.data.data
-        // console.log(this.citiesList)
       }
-    }),
-      this.$axios({
-        url: '/posts/recommend'
-      }).then(res => {
-        console.log(res)
-      })
+    })
+
+    this.$axios({
+      url: '/posts/recommend'
+    }).then(res => {
+      console.log(res)
+      this.recommentCityImg = res.data.data[0].images[0]
+    })
 
     // 获取文章列表
     this.getPostList(this.$route.query)

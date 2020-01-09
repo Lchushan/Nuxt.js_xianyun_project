@@ -121,7 +121,7 @@ p {
     > img {
       width: 220px;
       height: 150px;
-      background-color: pink;
+      // background-color: pink;
     }
   }
 }
@@ -136,7 +136,7 @@ p {
     > img {
       width: 100%;
       height: 150px;
-      background-color: pink;
+      // background-color: pink;
     }
   }
   .post-container {
