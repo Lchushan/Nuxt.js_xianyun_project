@@ -8,7 +8,7 @@
       </el-breadcrumb>
       <h1>{{postDetail.title}}</h1>
       <div class="post-info">
-        <span>攻略：2019-05-22 10:57</span>
+        <span>攻略：{{postDetail.created_at | dataFormat('-')}}</span>
         <span>阅读： {{postDetail.watch}}</span>
       </div>
       <div class="post-content" v-html="postDetail.content"></div>
@@ -36,11 +36,11 @@
     <!-- 右侧栏 -->
     <div class="aside">
       <h4 class="aside-title">相关攻略</h4>
-      <div class="recomment-item">
-        <img src="/imgage" alt />
+      <div class="recomment-item" v-for="(item,index) in recommentPost" :key="index">
+        <img :src="item.images[0]" alt />
         <div class="post-text">
-          <div>我就使用以下</div>
-          <p>2020-01-19 11:02 阅读</p>
+          <div>{{item.title}}</div>
+          <p>{{item.created_at | dataFormat('-')}} 阅读{{item.watch || 0}}</p>
         </div>
       </div>
     </div>
@@ -49,25 +49,38 @@
 
 <script>
 import cmtWrapper from '@/components/post/cmtWrapper'
+import { dataFormat } from '@/store/filter'
 export default {
   data() {
     return {
-      postDetail: {}
+      postDetail: {},
+      recommentPost: []
     }
   },
   components: {
     cmtWrapper
   },
+  filters: {
+    dataFormat
+  },
   mounted() {
+    // 获取文章详情
     const id = this.$route.query.id
     console.log(this.$route.query.id)
     this.$axios({
       url: `/posts/${id}`
     }).then(res => {
-      console.log(res)
       this.postDetail = res.data
+      console.log(this.postDetail)
     })
-  }
+    // 获取推荐文章列表
+    this.$axios({
+      url: '/posts/recommend'
+    }).then(res => {
+      this.recommentPost = res.data.data
+    })
+  },
+  methods: {}
 }
 </script>
 
@@ -151,6 +164,13 @@ export default {
         flex-direction: column;
         justify-content: space-between;
         width: 170px;
+        div {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+        }
         p {
           color: #999;
           font: 12px 'Source Sans Pro';
