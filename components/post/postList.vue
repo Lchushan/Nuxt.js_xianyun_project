@@ -1,12 +1,12 @@
 <template>
   <!-- 文章格式1 -->
   <div class="post-list1" v-if="data.images.length>2">
-    <h4>{{data.title}}</h4>
-    <p v-html="data.summary"></p>
+    <h4 @click="toPostDetails">{{data.title}}</h4>
+    <p v-html="data.summary" @click="toPostDetails"></p>
     <div class="post-imgs">
-      <img :src="data.images[0]" alt />
-      <img :src="data.images[1]" alt />
-      <img :src="data.images[2]" alt />
+      <img :src="data.images[0]" alt @click="toPostDetails" />
+      <img :src="data.images[1]" alt @click="toPostDetails" />
+      <img :src="data.images[2]" alt @click="toPostDetails" />
     </div>
     <div class="post-info">
       <div class="post-info-left">
@@ -29,11 +29,11 @@
   <!-- 文章格式2 -->
   <div class="post-list2" v-else-if="data.images.length<=2">
     <div class="img">
-      <img :src="data.images[0]" alt />
+      <img :src="data.images[0]" alt @click="toPostDetails" />
     </div>
     <div class="post-container">
-      <h4>{{data.title}}</h4>
-      <p v-html="data.summary"></p>
+      <h4 @click="toPostDetails">{{data.title}}</h4>
+      <p v-html="data.summary" @click="toPostDetails"></p>
       <div class="post-info">
         <div class="post-info-left">
           <span>
@@ -61,7 +61,14 @@ export default {
   data() {
     return {}
   },
-  mounted() {}
+  methods: {
+    toPostDetails() {
+      this.$router.push({ path: `post/detail?id=${this.data.id}` })
+    }
+  },
+  mounted() {
+    console.log(this.data)
+  }
 }
 </script>
 
@@ -74,6 +81,10 @@ h4 {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
+  cursor: pointer;
+  &:hover {
+    color: #ffa500;
+  }
 }
 // 内容
 p {
@@ -83,6 +94,7 @@ p {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
+  cursor: pointer;
 }
 // 底部的用户信息
 .post-info {
@@ -122,7 +134,7 @@ p {
     > img {
       width: 220px;
       height: 150px;
-      // background-color: pink;
+      cursor: pointer;
     }
   }
 }
@@ -137,7 +149,7 @@ p {
     > img {
       width: 100%;
       height: 150px;
-      // background-color: pink;
+      cursor: pointer;
     }
   }
   .post-container {
