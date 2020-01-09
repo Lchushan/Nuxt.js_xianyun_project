@@ -75,7 +75,7 @@
         </div>
         <!-- 文章列表 -->
         <div class="post-list"></div>
-        <PostList :data="item" v-for="(item,index) in postsList.data" :key="index" />
+        <PostList :data="item" v-for="(item,index) in dataList" :key="index" />
         <!-- 分页模块 -->
         <el-pagination
           @size-change="handleSizeChange"
@@ -116,6 +116,15 @@ export default {
         this.postsList = res.data
         console.log(this.postsList)
       })
+    }
+  },
+  computed: {
+    dataList() {
+      if(!this.postsList.data) return []
+      return this.postsList.data.slice(
+        (this.currentPage-1)*this.currentSize,
+        this.currentPage*this.currentSize
+      )
     }
   },
   components: {
@@ -161,11 +170,13 @@ export default {
     },
     // 点击分页的每页条数
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
+      this.currentSize=val
+      // console.log(`每页 ${val} 条`)
     },
     // 点击分页的页码
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
+      this.currentPage=val
+      // console.log(`当前页: ${val}`)
     }
   },
   mounted() {
