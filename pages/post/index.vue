@@ -171,12 +171,10 @@ export default {
     // 点击分页的每页条数
     handleSizeChange(val) {
       this.currentSize=val
-      // console.log(`每页 ${val} 条`)
     },
     // 点击分页的页码
     handleCurrentChange(val) {
       this.currentPage=val
-      // console.log(`当前页: ${val}`)
     }
   },
   mounted() {
@@ -252,9 +250,8 @@ export default {
           .sub-munes-item {
             height: 36px;
             line-height: 36px;
-            font: 14px 'Source Sans Pro';
+            font-size: 14px;
             vertical-align: top;
-            // a {
             color: #ffa500;
             cursor: pointer;
             i {
@@ -276,7 +273,6 @@ export default {
                 border-bottom: 1px solid #999;
               }
             }
-            // }
           }
         }
       }
@@ -304,7 +300,6 @@ export default {
       width: 700px;
       .search {
         width: 700px;
-        // height: 40px;
         background-color: #fff;
         .serach-inputs {
           display: flex;
@@ -346,7 +341,7 @@ export default {
         border-bottom: 1px solid #ddd;
         background-color: #fff;
         h4 {
-          font: 18px 'Source Sans Pro';
+          font-size: 18px;
           color: #ffa500;
           &::after {
             display: block;

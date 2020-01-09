@@ -81,6 +81,7 @@ td {
   margin: 0;
   padding: 0;
   border: 0;
+  font-family: 'Source Sans Pro';
 }
 table {
   border-collapse: collapse;
