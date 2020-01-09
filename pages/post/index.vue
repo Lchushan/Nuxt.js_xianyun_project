@@ -22,11 +22,11 @@
           <div class="sub-munes" v-if="isShow">
             <ul>
               <li class="sub-munes-item" v-for="(item,index) in citiesChildrenList" :key="index">
-                <a href="#">
-                  <i>{{index+1}}</i>
-                  <strong>{{item.city}}</strong>
-                  <span>{{item.desc}}</span>
-                </a>
+                <!-- <a href="javascript(0):;"> -->
+                <i>{{index+1}}</i>
+                <strong @click="$router.push({path: `/post?city=${item.city}`})">{{item.city}}</strong>
+                <span @click="$router.push({path: `/post?city=${item.city}`})">{{item.desc}}</span>
+                <!-- </a> -->
               </li>
             </ul>
           </div>
@@ -34,7 +34,7 @@
         <!-- 左侧的推荐城市 -->
         <div class="aside-recommend">
           <h4 class="aside-title">推荐城市</h4>
-          <a href="#" class="aside-recommend-item">
+          <a href="#" class="aside-recommend-item" @click="$router.push({path:'/post'})">
             <!-- <img data-v-053600ae="" src=""> -->
             <img src="/images/pic_sea.jpeg" alt />
           </a>
@@ -50,7 +50,12 @@
           </div>
           <div class="search-recommend">
             推荐：
-            <span class="mouseEnter" v-for="(item,index) in recoCities" :key="index">{{item}}</span>
+            <span
+              class="mouseEnter"
+              v-for="(item,index) in recoCities"
+              :key="index"
+              @click="$router.push({path: `/post?city=${item}`})"
+            >{{item}}</span>
           </div>
         </div>
         <!-- 文章主题 -->
@@ -87,7 +92,19 @@ export default {
       isShow: false,
       currentPage: 1,
       postsList: [],
-      recoCities:['广州','上海','北京'],
+      recoCities: ['广州', '上海', '北京']
+      // city: ''
+    }
+  },
+  watch: {
+    $route() {
+      this.$axios({
+        url: '/posts',
+        params: this.$route.query
+      }).then(res => {
+        this.postsList = res.data
+        console.log(this.postsList)
+      })
     }
   },
   components: {
@@ -112,9 +129,25 @@ export default {
       }
       this.isShow = false
     },
+    // 获取文章列表
+    getPostList(city) {
+      this.$axios({
+        url: '/posts',
+        params: city
+      }).then(res => {
+        this.postsList = res.data
+        // console.log(this.postsList)
+      })
+    },
+    // 点击根据城市获取文章列表
+    toGetPostList(city) {
+      getPostList(city)
+    },
+    // 点击分页的每页条数
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
     },
+    // 点击分页的页码
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`)
     }
@@ -129,13 +162,14 @@ export default {
         // console.log(this.citiesList)
       }
     }),
-      // 获取文章列表
       this.$axios({
-        url: '/posts'
+        url: '/posts/recommend'
       }).then(res => {
-        this.postsList = res.data
-        console.log(this.postsList)
+        console.log(res)
       })
+
+    // 获取文章列表
+    this.getPostList(this.$route.query)
   }
 }
 </script>
@@ -192,28 +226,29 @@ export default {
             line-height: 36px;
             font: 14px 'Source Sans Pro';
             vertical-align: top;
-            a {
-              color: #ffa500;
-              i {
-                position: relative;
-                top: 5px;
-                height: 32px;
-                font-size: 24px;
-                font-style: oblique;
-              }
-              strong {
-                margin: 0 10px;
-                &:hover {
-                  border-bottom: 1px solid #ffa500;
-                }
-              }
-              span {
-                color: #999;
-                &:hover {
-                  border-bottom: 1px solid #999;
-                }
+            // a {
+            color: #ffa500;
+            cursor: pointer;
+            i {
+              position: relative;
+              top: 5px;
+              height: 32px;
+              font-size: 24px;
+              font-style: oblique;
+            }
+            strong {
+              margin: 0 10px;
+              &:hover {
+                border-bottom: 1px solid #ffa500;
               }
             }
+            span {
+              color: #999;
+              &:hover {
+                border-bottom: 1px solid #999;
+              }
+            }
+            // }
           }
         }
       }

@@ -11,20 +11,23 @@
     <div class="post-info">
       <div class="post-info-left">
         <span>
-          <i class="el-icon-location-outline"></i>{{data.cityName}} by
+          <i class="el-icon-location-outline"></i>
+          {{data.cityName}} by
         </span>
         <span class="post-info-user">
-          <img :src="data.account.defaultAvatar" alt /> {{data.account.nickname}}
+          <img :src="$axios.defaults.baseURL+data.account.defaultAvatar" alt />
+          {{data.account.nickname}}
         </span>
         <span>
-          <i class="el-icon-view"></i> 12833
+          <i class="el-icon-view"></i>
+          {{data.watch || 0}}
         </span>
       </div>
-      <div class="users-like">74赞</div>
+      <div class="users-like">{{data.like || 0}}赞</div>
     </div>
   </div>
   <!-- 文章格式2 -->
-  <div class="post-list2" v-else-if="data.images.length<2">
+  <div class="post-list2" v-else-if="data.images.length<=2">
     <div class="img">
       <img :src="data.images[0]" alt />
     </div>
@@ -34,16 +37,19 @@
       <div class="post-info">
         <div class="post-info-left">
           <span>
-            <i class="el-icon-location-outline"></i>{{data.cityName}} by
+            <i class="el-icon-location-outline"></i>
+            {{data.cityName}} by
           </span>
           <span class="post-info-user">
-            <img :src="data.account.defaultAvatar" alt /> {{data.account.nickname}}
+            <img :src="$axios.defaults.baseURL+data.account.defaultAvatar" alt />
+            {{data.account.nickname}}
           </span>
           <span>
-            <i class="el-icon-view"></i> 12833
+            <i class="el-icon-view"></i>
+            {{data.watch || 0}}
           </span>
         </div>
-        <div class="users-like">74赞</div>
+        <div class="users-like">{{data.like || 0}}赞</div>
       </div>
     </div>
   </div>
@@ -53,13 +59,9 @@
 export default {
   props: ['data'],
   data() {
-    return {
-      isNum: '1'
-    }
+    return {}
   },
-  mounted(){
-    // data.account.defaultAvatar=window.localStorage.getItem('')+data.account.defaultAvatar
-  }
+  mounted() {}
 }
 </script>
 
@@ -90,6 +92,7 @@ p {
     font: 12px 'Source Sans Pro';
     color: #999;
     .post-info-user {
+      padding: 0 5px;
       color: #ffa500;
       > img {
         margin-bottom: 3px;
