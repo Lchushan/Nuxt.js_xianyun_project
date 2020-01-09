@@ -31,7 +31,7 @@
         </div>
       </div>
       <!-- 评论区域 -->
-      <cmtWrapper />
+      <cmtWrapper :commentList="commentList" />
     </div>
     <!-- 右侧栏 -->
     <div class="aside">
@@ -54,7 +54,8 @@ export default {
   data() {
     return {
       postDetail: {},
-      recommentPost: []
+      recommentPost: [],
+      commentList: []
     }
   },
   components: {
@@ -71,7 +72,7 @@ export default {
       url: `/posts/${id}`
     }).then(res => {
       this.postDetail = res.data
-      console.log(this.postDetail)
+      // console.log(this.postDetail)
     })
     // 获取推荐文章列表
     this.$axios({
@@ -79,8 +80,20 @@ export default {
     }).then(res => {
       this.recommentPost = res.data.data
     })
+    // 获取文章评论列表
+    this.$axios({
+      url: '/posts/comments',
+      params: {
+        post: id
+      }
+    }).then(res => {
+      // console.log(res)
+      this.commentList = res.data.data
+      console.log(this.commentList)
+    })
   },
-  methods: {}
+  methods: {
+  }
 }
 </script>
 

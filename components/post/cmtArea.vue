@@ -2,22 +2,39 @@
   <div class="cmt-area">
     <div class="cmt-info">
       <div class="user">
-        地球发动机
-        <i>2020-01-09 3:00</i>
+        {{areaData.account.nickname}}
+        <i>{{areaData.account.created_at|dataFormat('-')}}</i>
       </div>
       <span>1</span>
     </div>
+    <recursion
+      v-if="areaData.parent"
+      :areaData="areaData.parent"
+      @answerComment="answerComment(areaData.parent.account.nickname)"
+    ></recursion>
     <div class="ctm-content">
-      <p class="ctm-message">组件递归</p>
-      <div class="ctm-ctrl">
-        <a href="#">回复</a>
+      <p class="ctm-message">{{areaData.content}}</p>
+      <div class="ctm-ctrl" ref="ctmCtrl">
+        <a href="javascript:;" @click="answerComment(areaData.account.nickname)">回复</a>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+import { dataFormat } from '@/store/filter'
+export default {
+  props: ['areaData'],
+  name: 'recursion',
+  filters: {
+    dataFormat
+  },
+  methods: {
+    answerComment(e) {
+      this.$emit('answerComment', e)
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>
@@ -44,11 +61,15 @@ export default {}
       justify-content: flex-end;
       height: 20px;
       font-size: 12px;
-      color: #1e50a2;
-      &:hover {
+      color: #fff;
+      a:hover {
         text-decoration: underline;
+        color: #1e50a2;
       }
     }
+  }
+  .ctm-content:hover .ctm-ctrl {
+    color: #1e50a2;
   }
 }
 </style>

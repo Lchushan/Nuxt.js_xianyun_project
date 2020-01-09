@@ -2,6 +2,13 @@
   <div class="cmt-wrapper">
     <!-- 标题 -->
     <h4 class="cmt-title">评论</h4>
+    <!-- 回复按钮 -->
+    <span class="showReply" v-if="replayUser">
+      回复 @{{replaynickname}}
+      <span class="det">
+        <i class="el-icon-close" @click="replayUser=false"></i>
+      </span>
+    </span>
     <!-- 文本域 -->
     <div class="cmt-input">
       <textarea cols="30" rows="10" placeholder="说点什么吧..." v-model="ctmInput"></textarea>
@@ -24,12 +31,18 @@
       </div>
       <!-- 提交按钮 -->
       <div>
-        <el-button type="primary">提交</el-button>
+        <el-button type="primary" @click="submitFile">提交</el-button>
       </div>
     </div>
     <!-- 评论内容 -->
     <div class="cmt-items">
-      <ctmItem />
+      <ctmItem
+        :data="item"
+        v-for="(item,index) in commentList"
+        :key="index"
+        @replayComment="replayComment"
+        @answerComment="replayComment"
+      />
     </div>
     <!-- 分页模块 -->
     <el-pagination
@@ -47,12 +60,15 @@
 <script>
 import ctmItem from '@/components/post/cmtItem'
 export default {
+  props: ['commentList'],
   data() {
     return {
       ctmInput: '',
       dialogImageUrl: '',
       dialogVisible: false,
-      currentPage: 1
+      currentPage: 1,
+      replayUser: false,
+      replaynickname: ''
     }
   },
   components: {
@@ -63,6 +79,18 @@ export default {
     setToken() {},
     // 上传图片的函数
     coverSuccess() {},
+    // 发表评论
+    submitFile() {
+      console.log(`11111`)
+      // this.$emit('submitFile')
+    },
+    // 点击一级评论回复
+    replayComment(e) {
+      console.log(22222)
+      this.replayUser = true
+      this.replaynickname = e
+      // this.$emit('replayComment', e)
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
     },
@@ -79,6 +107,31 @@ export default {
     margin-bottom: 20px;
     font-size: 18px;
     font-weight: normal;
+  }
+  .showReply {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 0 10px;
+    height: 32px;
+    line-height: 32px;
+    border: 1px solid #e0e0e3;
+    border-radius: 5px;
+    background-color: #f4f4f5;
+    font-size: 12px;
+    color: #999;
+    .el-icon-close {
+      margin-left: 5px;
+      width: 16px;
+      height: 16px;
+      line-height: 16px;
+      cursor: pointer;
+      border-radius: 50%;
+      text-align: center;
+      &:hover {
+        background-color: #909399;
+        color: #fff;
+      }
+    }
   }
   .cmt-input {
     margin-bottom: 10px;
@@ -107,6 +160,12 @@ export default {
   .cmt-items {
     font-size: 16px;
     border: 1px solid #ddd;
+    .cmt-item {
+      border-bottom: 1px dashed #ddd;
+      &:nth-last-child(1) {
+        border: none;
+      }
+    }
   }
   .el-pagination {
     margin-top: 10px;
