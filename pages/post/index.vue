@@ -67,7 +67,11 @@
         <!-- 文章主题 -->
         <div class="post-title">
           <h4>推荐攻略</h4>
-          <el-button type="primary" icon="el-icon-edit">写游记</el-button>
+          <el-button
+            type="primary"
+            icon="el-icon-edit"
+            @click="$router.push({path: '/post/create'})"
+          >写游记</el-button>
         </div>
         <!-- 文章列表 -->
         <div class="post-list"></div>
@@ -97,6 +101,7 @@ export default {
       citiesChildrenList: [],
       isShow: false,
       currentPage: 1,
+      currentSize: 3,
       postsList: [],
       recoCities: ['广州', '上海', '北京'],
       recommentCityImg: ''

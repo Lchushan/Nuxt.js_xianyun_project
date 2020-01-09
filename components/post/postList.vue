@@ -14,7 +14,7 @@
           <i class="el-icon-location-outline"></i>
           {{data.cityName}} by
         </span>
-        <span class="post-info-user">
+        <span class="post-info-user" @click="$router.push({path: '/user/personal'})">
           <img :src="$axios.defaults.baseURL+data.account.defaultAvatar" alt />
           {{data.account.nickname}}
         </span>
@@ -40,7 +40,7 @@
             <i class="el-icon-location-outline"></i>
             {{data.cityName}} by
           </span>
-          <span class="post-info-user">
+          <span class="post-info-user" @click="$router.push({path: '/user/personal'})">
             <img :src="$axios.defaults.baseURL+data.account.defaultAvatar" alt />
             {{data.account.nickname}}
           </span>
@@ -93,6 +93,7 @@ p {
     color: #999;
     .post-info-user {
       padding: 0 5px;
+      cursor: pointer;
       color: #ffa500;
       > img {
         margin-bottom: 3px;
