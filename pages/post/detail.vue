@@ -7,9 +7,29 @@
         <el-breadcrumb-item>攻略详情</el-breadcrumb-item>
       </el-breadcrumb>
       <h1>{{postDetail.title}}</h1>
-      <div class="post-info"><span>攻略：2019-05-22 10:57 </span> <span>阅读： {{postDetail.watch}}</span></div>
+      <div class="post-info">
+        <span>攻略：2019-05-22 10:57</span>
+        <span>阅读： {{postDetail.watch}}</span>
+      </div>
       <div class="post-content" v-html="postDetail.content"></div>
-      <div class="post-ctrl">评论 收藏 分享 点赞</div>
+      <div class="post-ctrl">
+        <div class="ctrl-item">
+          <i class="el-icon-edit-outline"></i>
+          <p>评论</p>
+        </div>
+        <div class="ctrl-item">
+          <i class="el-icon-star-off"></i>
+          <p>收藏</p>
+        </div>
+        <div class="ctrl-item">
+          <i class="el-icon-share"></i>
+          <p>分享</p>
+        </div>
+        <div class="ctrl-item">
+          <i class="el-icon-thumb"></i>
+          <p>点赞</p>
+        </div>
+      </div>
       <div class="cmt-wrapper">评论</div>
     </div>
     <!-- 右侧栏 -->
@@ -80,6 +100,24 @@ export default {
       display: flex;
       justify-content: center;
       padding: 50px 0 30px;
+      cursor: pointer;
+      .ctrl-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        margin: 0 20px;
+        font-size: 20px;
+        i {
+          font-size: 28px;
+          color: #ffa500;
+        }
+        p {
+          margin-top: 5px;
+          color: #999;
+          font-size: 14px;
+        }
+      }
     }
     .cmt-wrapper {
       margin-bottom: 20px;
