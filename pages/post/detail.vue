@@ -36,11 +36,16 @@
     <!-- 右侧栏 -->
     <div class="aside">
       <h4 class="aside-title">相关攻略</h4>
-      <div class="recomment-item" v-for="(item,index) in recommentPost" :key="index">
+      <div
+        class="recomment-item"
+        v-for="(item,index) in recommentPost"
+        :key="index"
+        @click="$router.push({path:`/post/detail?id=${item.id}`})"
+      >
         <img :src="item.images[0]" alt />
         <div class="post-text">
           <div>{{item.title}}</div>
-          <p>{{item.created_at | dataFormat('-')}} 阅读{{item.watch || 0}}</p>
+          <p>{{item.created_at | dataFormat('-')}} 阅读 {{item.watch || 0}}</p>
         </div>
       </div>
     </div>
@@ -63,6 +68,29 @@ export default {
   },
   filters: {
     dataFormat
+  },
+  watch: {
+    // 获取文章详情
+    $route() {
+      const id = this.$route.query.id
+      this.$axios({
+        url: `/posts/${id}`
+      }).then(res => {
+        this.postDetail = res.data
+        // console.log(this.postDetail)
+      })
+      // 获取文章评论列表
+      this.$axios({
+        url: '/posts/comments',
+        params: {
+          post: id
+        }
+      }).then(res => {
+        // console.log(res)
+        this.commentList = res.data.data
+        console.log(this.commentList)
+      })
+    }
   },
   mounted() {
     // 获取文章详情
@@ -92,8 +120,7 @@ export default {
       console.log(this.commentList)
     })
   },
-  methods: {
-  }
+  methods: {}
 }
 </script>
 
@@ -166,6 +193,7 @@ export default {
       display: flex;
       justify-content: space-between;
       padding: 20px 0;
+      cursor: pointer;
       border-bottom: 1px solid #ddd;
       > img {
         width: 100px;

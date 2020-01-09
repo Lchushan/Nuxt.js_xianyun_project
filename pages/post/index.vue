@@ -34,7 +34,7 @@
         <!-- 左侧的推荐城市 -->
         <div class="aside-recommend">
           <h4 class="aside-title">推荐城市</h4>
-          <a href="#" class="aside-recommend-item" @click="$router.push({path:'/post'})">
+          <a href="#" class="aside-recommend-item" @click="toSearchAll">
             <!-- <img data-v-053600ae="" src=""> -->
             <img :src="recommentCityImg" alt />
           </a>
@@ -109,6 +109,7 @@ export default {
   },
   watch: {
     $route() {
+      //获取文章
       this.$axios({
         url: '/posts',
         params: this.$route.query
@@ -120,10 +121,10 @@ export default {
   },
   computed: {
     dataList() {
-      if(!this.postsList.data) return []
+      if (!this.postsList.data) return []
       return this.postsList.data.slice(
-        (this.currentPage-1)*this.currentSize,
-        this.currentPage*this.currentSize
+        (this.currentPage - 1) * this.currentSize,
+        this.currentPage * this.currentSize
       )
     }
   },
@@ -158,6 +159,11 @@ export default {
         this.postsList = res.data
       })
     },
+    // 点击推荐城市的图片
+    toSearchAll() {
+      this.$router.push({ path: '/post' })
+      this.getPostList(this.$route.query)
+    },
     // 点击搜索按钮搜索城市
     toSearchPost() {
       // console.log(this.$refs.searchInp.value)
@@ -170,11 +176,11 @@ export default {
     },
     // 点击分页的每页条数
     handleSizeChange(val) {
-      this.currentSize=val
+      this.currentSize = val
     },
     // 点击分页的页码
     handleCurrentChange(val) {
-      this.currentPage=val
+      this.currentPage = val
     }
   },
   mounted() {
@@ -291,7 +297,7 @@ export default {
           img {
             width: 100%;
             height: 170px;
-            background-color: pink;
+            // background-color: pink;
           }
         }
       }

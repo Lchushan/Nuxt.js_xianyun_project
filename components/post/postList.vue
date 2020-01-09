@@ -1,9 +1,9 @@
 <template>
   <!-- 文章格式1 -->
-  <div class="post-list1" v-if="data.images.length>2">
+  <div class="post-list1" v-if="data.images.length>2 || data.images.length===0">
     <h4 @click="toPostDetails">{{data.title}}</h4>
     <p v-html="data.summary" @click="toPostDetails"></p>
-    <div class="post-imgs">
+    <div class="post-imgs" v-if="data.images.length>0">
       <img :src="data.images[0]" alt @click="toPostDetails" />
       <img :src="data.images[1]" alt @click="toPostDetails" />
       <img :src="data.images[2]" alt @click="toPostDetails" />
@@ -27,7 +27,7 @@
     </div>
   </div>
   <!-- 文章格式2 -->
-  <div class="post-list2" v-else-if="data.images.length<=2">
+  <div class="post-list2" v-else-if="data.images.length<3">
     <div class="img">
       <img :src="data.images[0]" alt @click="toPostDetails" />
     </div>
@@ -124,7 +124,7 @@ p {
 // 文章列表格式1
 .post-list1 {
   padding: 15px 0;
-  border-bottom: 1px solid #999;
+  border-bottom: 1px solid #ddd;
 
   .post-imgs {
     // position: relative;
@@ -143,7 +143,7 @@ p {
   display: flex;
   justify-content: space-between;
   padding: 15px 0;
-  border-bottom: 1px solid #999;
+  border-bottom: 1px solid #ddd;
   .img {
     width: 220px;
     > img {
