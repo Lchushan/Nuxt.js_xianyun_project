@@ -30,7 +30,8 @@
           <p>点赞</p>
         </div>
       </div>
-      <div class="cmt-wrapper">评论</div>
+      <!-- 评论区域 -->
+      <cmtWrapper />
     </div>
     <!-- 右侧栏 -->
     <div class="aside">
@@ -47,11 +48,15 @@
 </template>
 
 <script>
+import cmtWrapper from '@/components/post/cmtWrapper'
 export default {
   data() {
     return {
       postDetail: {}
     }
+  },
+  components: {
+    cmtWrapper
   },
   mounted() {
     const id = this.$route.query.id
