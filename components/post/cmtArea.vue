@@ -10,12 +10,12 @@
     <recursion
       v-if="areaData.parent"
       :areaData="areaData.parent"
-      @answerComment="answerComment(areaData.parent.account.nickname)"
+      @answerComment="answerComment(areaData.parent)"
     ></recursion>
     <div class="ctm-content">
       <p class="ctm-message">{{areaData.content}}</p>
       <div class="ctm-ctrl" ref="ctmCtrl">
-        <a href="javascript:;" @click="answerComment(areaData.account.nickname)">回复</a>
+        <a href="javascript:;" @click="answerComment(areaData)">回复</a>
       </div>
     </div>
   </div>

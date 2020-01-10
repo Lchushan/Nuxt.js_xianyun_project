@@ -11,7 +11,7 @@
     </span>
     <!-- 文本域 -->
     <div class="cmt-input">
-      <textarea cols="30" rows="10" placeholder="说点什么吧..." v-model="ctmInput"></textarea>
+      <textarea cols="30" rows="10" placeholder="说点什么吧..." v-model="commentFild.content"></textarea>
     </div>
     <div class="cmt-input-ctrils">
       <!-- 上传图片 -->
@@ -52,7 +52,7 @@
       :page-sizes="[2,4,6,8,10]"
       :page-size="2"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="10"
+      :total="commentList.length"
     ></el-pagination>
   </div>
 </template>
@@ -60,10 +60,9 @@
 <script>
 import ctmItem from '@/components/post/cmtItem'
 export default {
-  props: ['commentList'],
+  props: ['commentList', 'commentFild'],
   data() {
     return {
-      ctmInput: '',
       dialogImageUrl: '',
       dialogVisible: false,
       currentPage: 1,
@@ -71,9 +70,6 @@ export default {
       replayUser: false,
       replaynickname: ''
     }
-  },
-  watch: {
-    $router() {}
   },
   components: {
     ctmItem
@@ -92,27 +88,30 @@ export default {
     setToken() {},
     // 上传图片的函数
     coverSuccess() {},
+    // inputed(){
+    // console.log(this.ctmInput)
+    // },
     // 发表评论
     submitFile() {
-      console.log(`11111`)
-      // this.$emit('submitFile')
+      if (!this.commentFild.content.trim()) {
+        return this.$message.warning('请输入评论内容')
+      }
+      this.$emit('submitFile', this.commentFild)
     },
     // 点击一级评论回复
     replayComment(e) {
-      console.log(22222)
       this.replayUser = true
-      this.replaynickname = e
-      // this.$emit('replayComment', e)
+      this.replaynickname = e.account.nickname
+      this.commentFild.follow = e.id
+      this.currentPage = 1
     },
     // 确定页面的条数
     handleSizeChange(val) {
       this.currenSize = val
-      console.log(`每页 ${val} 条`)
     },
     // 确定页码的页数
     handleCurrentChange(val) {
       this.currentPage = val
-      console.log(`当前页: ${val}`)
     }
   }
 }

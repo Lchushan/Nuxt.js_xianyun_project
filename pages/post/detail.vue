@@ -31,7 +31,12 @@
         </div>
       </div>
       <!-- 评论区域 -->
-      <cmtWrapper :commentList="commentList" />
+      <cmtWrapper
+        :commentList="commentList"
+        :commentFild="commentFild"
+        :postId="$route.query.id"
+        @submitFile="submitFile"
+      />
     </div>
     <!-- 右侧栏 -->
     <div class="aside">
@@ -60,7 +65,10 @@ export default {
     return {
       postDetail: {},
       recommentPost: [],
-      commentList: []
+      commentList: [],
+      commentFild: {
+        content: ''
+      }
     }
   },
   components: {
@@ -88,14 +96,13 @@ export default {
       }).then(res => {
         // console.log(res)
         this.commentList = res.data.data
-        console.log(this.commentList)
+        // console.log(this.commentList)
       })
     }
   },
   mounted() {
     // 获取文章详情
     const id = this.$route.query.id
-    console.log(this.$route.query.id)
     this.$axios({
       url: `/posts/${id}`
     }).then(res => {
@@ -115,9 +122,7 @@ export default {
         post: id
       }
     }).then(res => {
-      // console.log(res)
       this.commentList = res.data.data
-      console.log(this.commentList)
     })
   },
   methods: {
@@ -175,7 +180,6 @@ export default {
         }
       })
         .then(res => {
-          console.log(res)
           if (res.data.message === '点赞成功') {
             this.$message.warning(res.data.message)
           }
@@ -183,6 +187,46 @@ export default {
         .catch(err => {
           this.$message.warning('用户已经点赞')
         })
+    },
+    // (点击提交）发表评论
+    submitFile(v) {
+      // 文章id一定需要
+      v.post = this.$route.query.id
+      console.log(v)
+      // 获取token值
+      const {
+        user: { userInfo }
+      } = this.$store.state
+      // 未登录的状态
+      if (!userInfo.token) {
+        this.$message.warning('请先登录')
+        this.$router.push({ path: `/user/login` })
+        return
+      }
+      // 请求发表评论
+      this.$axios({
+        url: '/comments',
+        method: 'post',
+        data: v,
+        headers: {
+          Authorization: `Bearer ${userInfo.token || 'NO TOKEN'}`
+        }
+      }).then(res => {
+        console.log(res)
+        if (res.data.message === '提交成功') {
+          this.$message.success(res.data.message)
+          // 重新获取文章评论列表
+          this.$axios({
+            url: '/posts/comments',
+            params: {
+              post: this.$route.query.id
+            }
+          }).then(res => {
+            this.commentList = res.data.data
+            this.commentFild.content = ''
+          })
+        }
+      })
     }
   }
 }

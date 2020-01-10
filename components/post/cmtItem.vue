@@ -13,7 +13,7 @@
       <div class="show">
         <p class="ctm-message">{{data.content}}</p>
         <div class="ctm-ctrl">
-          <a href="javascript:;" @click="replayComment(data.account.nickname)">回复</a>
+          <a href="javascript:;" @click="replayComment(data)">回复</a>
         </div>
       </div>
     </div>

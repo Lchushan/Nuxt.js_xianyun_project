@@ -115,7 +115,7 @@ export default {
         params: this.$route.query
       }).then(res => {
         this.postsList = res.data
-        console.log(this.postsList)
+        // console.log(this.postsList)
       })
     }
   },
@@ -196,7 +196,7 @@ export default {
     this.$axios({
       url: '/posts/recommend'
     }).then(res => {
-      console.log(res)
+      // console.log(res)
       this.recommentCityImg = res.data.data[0].images[0]
     })
 
