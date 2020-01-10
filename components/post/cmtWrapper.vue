@@ -38,7 +38,7 @@
     <div class="cmt-items">
       <ctmItem
         :data="item"
-        v-for="(item,index) in commentList"
+        v-for="(item,index) in dataList"
         :key="index"
         @replayComment="replayComment"
         @answerComment="replayComment"
@@ -49,7 +49,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
-      :page-sizes="[2,4,6,8]"
+      :page-sizes="[2,4,6,8,10]"
       :page-size="2"
       layout="total, sizes, prev, pager, next, jumper"
       :total="10"
@@ -67,12 +67,25 @@ export default {
       dialogImageUrl: '',
       dialogVisible: false,
       currentPage: 1,
+      currenSize: 2,
       replayUser: false,
       replaynickname: ''
     }
   },
+  watch: {
+    $router() {}
+  },
   components: {
     ctmItem
+  },
+  computed: {
+    dataList() {
+      let arr = this.commentList.slice(
+        (this.currentPage - 1) * this.currenSize,
+        this.currentPage * this.currenSize
+      )
+      return arr
+    }
   },
   methods: {
     // 设置请求头（为了验证token值）
@@ -91,10 +104,14 @@ export default {
       this.replaynickname = e
       // this.$emit('replayComment', e)
     },
+    // 确定页面的条数
     handleSizeChange(val) {
+      this.currenSize = val
       console.log(`每页 ${val} 条`)
     },
+    // 确定页码的页数
     handleCurrentChange(val) {
+      this.currentPage = val
       console.log(`当前页: ${val}`)
     }
   }
