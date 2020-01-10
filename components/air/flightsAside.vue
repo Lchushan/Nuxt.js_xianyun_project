@@ -46,7 +46,7 @@ export default {
   },
   mounted() {
     this.airsLog = JSON.parse(window.localStorage.getItem('airs') || `[]`)
-    console.log(this.airsLog)
+    // console.log(this.airsLog)
   }
 }
 </script>

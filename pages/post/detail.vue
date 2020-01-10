@@ -17,7 +17,7 @@
           <i class="el-icon-edit-outline"></i>
           <p>评论</p>
         </div>
-        <div class="ctrl-item">
+        <div class="ctrl-item" @click="toStar">
           <i class="el-icon-star-off"></i>
           <p>收藏</p>
         </div>
@@ -25,7 +25,7 @@
           <i class="el-icon-share"></i>
           <p>分享</p>
         </div>
-        <div class="ctrl-item">
+        <div class="ctrl-item" @click="toLike">
           <i class="el-icon-thumb"></i>
           <p>点赞</p>
         </div>
@@ -120,7 +120,71 @@ export default {
       console.log(this.commentList)
     })
   },
-  methods: {}
+  methods: {
+    // 收藏文章
+    toStar() {
+      // 获取token值
+      const {
+        user: { userInfo }
+      } = this.$store.state
+      // 未登录的状态
+      if (!userInfo.token) {
+        this.$message.warning('请先登录')
+        this.$router.push({ path: `/user/login` })
+        return
+      }
+      // 请求收藏文章
+      this.$axios({
+        url: '/posts/star',
+        params: {
+          id: this.$route.query.id
+        },
+        headers: {
+          Authorization: `Bearer ${userInfo.token || 'NO TOKEN'}`
+        }
+      })
+        .then(res => {
+          if (res.data.message === '收藏成功') {
+            this.$message.warning(res.data.message)
+          }
+        })
+        .catch(err => {
+          this.$message.warning('已收藏')
+        })
+    },
+    // 点赞文章
+    toLike() {
+      // 获取token值
+      const {
+        user: { userInfo }
+      } = this.$store.state
+      // 未登录的状态
+      if (!userInfo.token) {
+        this.$message.warning('请先登录')
+        this.$router.push({ path: `/user/login` })
+        return
+      }
+      // 请求点赞文章
+      this.$axios({
+        url: '/posts/like',
+        params: {
+          id: this.$route.query.id
+        },
+        headers: {
+          Authorization: `Bearer ${userInfo.token || 'NO TOKEN'}`
+        }
+      })
+        .then(res => {
+          console.log(res)
+          if (res.data.message === '点赞成功') {
+            this.$message.warning(res.data.message)
+          }
+        })
+        .catch(err => {
+          this.$message.warning('用户已经点赞')
+        })
+    }
+  }
 }
 </script>
 
