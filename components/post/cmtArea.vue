@@ -14,6 +14,11 @@
     ></recursion>
     <div class="ctm-content">
       <p class="ctm-message">{{areaData.content}}</p>
+      <div class="imgs">
+        <div class="cmt-pic" v-for="(item,index) in areaData.pics" :key="index">
+          <img :src="$axios.defaults.baseURL + item.url" alt />
+        </div>
+      </div>
       <div class="ctm-ctrl" ref="ctmCtrl">
         <a href="javascript:;" @click="answerComment(areaData)">回复</a>
       </div>
@@ -65,6 +70,22 @@ export default {
       a:hover {
         text-decoration: underline;
         color: #1e50a2;
+      }
+    }
+    .imgs {
+      display: flex;
+      justify-content: flex-start;
+      .cmt-pic {
+        margin: 10px 5px 0 0;
+        padding: 5px;
+        width: 80px;
+        height: 80px;
+        border: 1px dashed #ddd;
+        border-radius: 6px;
+        > img {
+          width: 100%;
+          height: 100%;
+        }
       }
     }
   }

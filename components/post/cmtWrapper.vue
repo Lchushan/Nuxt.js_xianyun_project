@@ -15,13 +15,15 @@
     </div>
     <div class="cmt-input-ctrils">
       <!-- 上传图片 -->
+      <!-- <el-form> -->
+      <!-- <el-form-item> -->
       <div>
         <el-upload
-          action="http://localhost:3000/upload"
-          :headers="setToken()"
+          action="http://127.0.0.1:1337/upload"
           :on-success="coverSuccess"
           :limit="3"
           list-type="picture-card"
+          name="files"
         >
           <i class="el-icon-plus"></i>
         </el-upload>
@@ -29,6 +31,8 @@
           <img width="100%" :src="dialogImageUrl" alt />
         </el-dialog>
       </div>
+      <!-- </el-form-item> -->
+      <!-- </el-form> -->
       <!-- 提交按钮 -->
       <div>
         <el-button type="primary" @click="submitFile">提交</el-button>
@@ -68,7 +72,8 @@ export default {
       currentPage: 1,
       currenSize: 2,
       replayUser: false,
-      replaynickname: ''
+      replaynickname: '',
+      postFormImg: []
     }
   },
   components: {
@@ -84,18 +89,26 @@ export default {
     }
   },
   methods: {
-    // 设置请求头（为了验证token值）
-    setToken() {},
     // 上传图片的函数
-    coverSuccess() {},
+    coverSuccess(response, file, fileList) {
+      // console.log(response)
+      this.postFormImg.push(...response)
+      // console.log(this.postFormImg)
+    },
     // inputed(){
     // console.log(this.ctmInput)
     // },
     // 发表评论
     submitFile() {
+      // 判断是否有图片，有图添加
+      if (this.postFormImg.length !== 0) {
+        this.commentFild.pics = this.postFormImg
+      }
+      // 判断内容是否为空
       if (!this.commentFild.content.trim()) {
         return this.$message.warning('请输入评论内容')
       }
+      // 向父组件发送点击请求
       this.$emit('submitFile', this.commentFild)
     },
     // 点击一级评论回复
@@ -172,6 +185,12 @@ export default {
     margin-bottom: 30px;
     width: 100%;
     font-size: 16px;
+    /deep/.el-upload--picture-card,
+    /deep/.el-upload-list__item {
+      width: 100px;
+      height: 100px;
+      line-height: 100px;
+    }
   }
   .cmt-items {
     font-size: 16px;

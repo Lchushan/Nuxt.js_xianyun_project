@@ -12,6 +12,11 @@
       <ctmArea :areaData="data.parent" v-if="data.parent" @answerComment="answerComment" />
       <div class="show">
         <p class="ctm-message">{{data.content}}</p>
+        <div class="imgs">
+          <div class="cmt-pic" v-for="(item,index) in data.pics" :key="index">
+            <img :src="$axios.defaults.baseURL + item.url" alt />
+          </div>
+        </div>
         <div class="ctm-ctrl">
           <a href="javascript:;" @click="replayComment(data)">回复</a>
         </div>
@@ -83,6 +88,22 @@ export default {
     }
     .show:hover .ctm-ctrl {
       color: #1e50a2;
+    }
+    .imgs {
+      display: flex;
+      justify-content: flex-start;
+      .cmt-pic {
+        margin: 10px 5px 0 0;
+        padding: 5px;
+        width: 80px;
+        height: 80px;
+        border: 1px dashed #ddd;
+        border-radius: 6px;
+        > img {
+          width: 100%;
+          height: 100%;
+        }
+      }
     }
   }
 }

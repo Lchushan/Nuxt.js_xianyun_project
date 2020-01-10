@@ -67,7 +67,8 @@ export default {
       recommentPost: [],
       commentList: [],
       commentFild: {
-        content: ''
+        content: '',
+        pics:[]
       }
     }
   },
@@ -123,6 +124,7 @@ export default {
       }
     }).then(res => {
       this.commentList = res.data.data
+      console.log(this.commentList)
     })
   },
   methods: {
