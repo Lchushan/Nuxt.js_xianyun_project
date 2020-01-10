@@ -6,9 +6,10 @@
         {{data.account.nickname}}
         <i>{{data.account.created_at|dataFormat('-')}}</i>
       </div>
-      <span>1</span>
+      <span>{{commentNumber}}</span>
     </div>
     <div class="ctm-content">
+      <!-- 二级评论 -->
       <ctmArea :areaData="data.parent" v-if="data.parent" @answerComment="answerComment" />
       <div class="show">
         <p class="ctm-message">{{data.content}}</p>
@@ -30,12 +31,33 @@ import ctmArea from '@/components/post/cmtArea'
 import { dataFormat } from '@/store/filter'
 export default {
   props: ['data'],
+  data() {
+    return {
+      localNum: 0
+    }
+  },
+  computed: {
+    commentNumber() {
+      // 递归函数计算级别
+      function countNum(v) {
+        if (v.parent) {
+          i++
+          countNum(v.parent)
+          return i
+        }
+      }
+      let i = 1
+      countNum(this.data)
+      return i
+    }
+  },
   filters: {
     dataFormat
   },
   components: {
     ctmArea
   },
+  mounted() {},
   methods: {
     // 一级评论
     replayComment(data) {
@@ -69,6 +91,10 @@ export default {
       i {
         color: #999;
       }
+    }
+    > span {
+      color: #666;
+      font-size: 12px;
     }
   }
   .ctm-content {

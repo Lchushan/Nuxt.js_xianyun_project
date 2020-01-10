@@ -5,8 +5,9 @@
         {{areaData.account.nickname}}
         <i>{{areaData.account.created_at|dataFormat('-')}}</i>
       </div>
-      <span>1</span>
+      <span>{{commentNumber}}</span>
     </div>
+    <!-- 递归评论 -->
     <recursion
       v-if="areaData.parent"
       :areaData="areaData.parent"
@@ -34,6 +35,22 @@ export default {
   filters: {
     dataFormat
   },
+  computed: {
+    // 级别
+    commentNumber() {
+      // 递归函数计算级别
+      function countNum(v) {
+        if (v.parent) {
+          i++
+          countNum(v.parent)
+          return i
+        }
+      }
+      let i = 1
+      countNum(this.areaData)
+      return i
+    }
+  },
   methods: {
     answerComment(e) {
       this.$emit('answerComment', e)
@@ -55,6 +72,10 @@ export default {
       i {
         color: #999;
       }
+    }
+    > span {
+      color: #666;
+      font-size: 12px;
     }
   }
   .ctm-content {
