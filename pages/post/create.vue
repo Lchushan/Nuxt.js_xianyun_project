@@ -13,6 +13,11 @@
           <el-input v-model="form.city" placeholder="请搜索游玩城市" style="width: 30%;"></el-input>
         </el-form-item>
 
+        <!-- 富文本框 -->
+        <el-form-item>
+          <VueEditor :config="config" ref="connentPost" />
+        </el-form-item>
+
         <el-form-item>
           <el-button type="primary" @click="onSubmit">发布</el-button>
           <span>或者</span>
@@ -38,17 +43,45 @@
 </template>
 
 <script>
+import VueEditor from 'vue-word-editor'
+import 'quill/dist/quill.snow.css'
 export default {
   data() {
     return {
       form: {
         title: ''
+      },
+      config: {
+        // 上传图片的配置
+        uploadImage: {
+          url: 'http://127.0.0.1:1337/upload',
+          name: 'file',
+          // res是结果，insert方法会把内容注入到编辑器中，res.data.url是资源地址
+          uploadSuccess(res, insert) {
+            insert('http://127.0.0.1:1337' + res.data.url)
+          }
+        },
+
+        // 上传视频的配置
+        uploadVideo: {
+          url: 'http://127.0.0.1:1337/upload',
+          name: 'file',
+          uploadSuccess(res, insert) {
+            insert('http://127.0.0.1:1337' + res.data.url)
+          }
+        }
       }
     }
+  },
+  components: {
+    VueEditor
   },
   methods: {
     onSubmit() {
       console.log(111)
+      // 获取富文本的内容
+      var quill = this.$refs.connentPost.editor
+      quill.root.innerHTML
     }
   }
 }
