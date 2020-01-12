@@ -76,7 +76,6 @@ export default {
             insert('http://127.0.0.1:1337' + res.data[0].url)
           }
         },
-
         // 上传视频的配置
         uploadVideo: {
           url: 'http://127.0.0.1:1337/upload',
@@ -117,7 +116,7 @@ export default {
           v.value = v.name
           return v
         })
-        console.log(this.travelCityData)
+        // console.log(this.travelCityData)
         // this.travelCityData = [...data]
         // 返回下拉列表的数组（value值）
         callback(this.travelCityData)
@@ -137,6 +136,16 @@ export default {
     },
     // 点击发布按钮
     onSubmit() {
+      // 获取token值
+      const {
+        user: { userInfo }
+      } = this.$store.state
+      // 未登录的状态
+      if (!userInfo.token) {
+        this.$message.warning('请先登录')
+        this.$router.push({ path: `/user/login` })
+        return
+      }
       // 判断题目是否为空
       if (!this.postForm.title) {
         this.$alert('请填写标题', '提示', {
@@ -155,20 +164,10 @@ export default {
         return this.$message.warning('请输入游记的城市')
       if (!this.postForm.city)
         return this.$message.warning('请选择正确的城市名称')
-      console.log(this.postForm)
+      // console.log(this.postForm)
       const { date, cityName, ...form } = this.postForm
       // form.city = +form.city
-      console.log(form)
-      // 获取token值
-      const {
-        user: { userInfo }
-      } = this.$store.state
-      // 未登录的状态
-      if (!userInfo.token) {
-        this.$message.warning('请先登录')
-        this.$router.push({ path: `/user/login` })
-        return
-      }
+      // 发布文章
       this.$axios({
         method: 'post',
         url: '/posts',
@@ -177,9 +176,13 @@ export default {
           Authorization: `Bearer ${userInfo.token || 'NO TOKEN'}`
         }
       }).then(res => {
-        console.log(res)
+        // console.log(res)
         if (res.data.message === '新增成功') {
           this.$message.success(res.data.message)
+          this.postForm.title = ''
+          this.postForm.cityName = ''
+          var quill = this.$refs.connentPost.editor
+          quill.root.innerHTML = ''
         }
       })
     },
@@ -215,12 +218,6 @@ export default {
       window.localStorage.getItem('travelNotes') || '[]'
     )
   }
-  // computed: {
-  //   draftData() {
-  //     let arr = JSON.parse(window.localStorage.getItem('travelNotes') || '[]')
-  //     return arr
-  //   }
-  // }
 }
 </script>
 

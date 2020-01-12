@@ -21,7 +21,6 @@
         <el-upload
           action="http://127.0.0.1:1337/upload"
           :on-success="coverSuccess"
-          :limit="3"
           list-type="picture-card"
           name="files"
         >
