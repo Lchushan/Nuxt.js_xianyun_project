@@ -104,7 +104,7 @@ export default {
       currentSize: 3,
       postsList: [],
       recoCities: ['广州', '上海', '北京'],
-      recommentCityImg: ''
+      recommentCityImg: 'http://157.122.54.189:9093/images/pic_sea.jpeg'
     }
   },
   watch: {
@@ -193,12 +193,12 @@ export default {
       }
     })
 
-    this.$axios({
-      url: '/posts/recommend'
-    }).then(res => {
-      // console.log(res)
-      this.recommentCityImg = res.data.data[0].images[0]
-    })
+    // this.$axios({
+    //   url: '/posts/recommend'
+    // }).then(res => {
+    //   // console.log(res)
+    //   this.recommentCityImg = res.data.data[0].images[0]
+    // })
 
     // 获取文章列表
     this.getPostList(this.$route.query)
