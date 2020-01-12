@@ -10,12 +10,19 @@
         </el-form-item>
 
         <el-form-item label="选择城市">
-          <el-input v-model="postForm.city" placeholder="请搜索游玩城市" style="width: 30%;"></el-input>
+          <el-autocomplete
+            :fetch-suggestions="queryDepartSearch"
+            placeholder="请搜索游玩城市"
+            @select="handleTravelCity"
+            class="el-autocomplete"
+            v-model="postForm.cityName"
+            @blur="loseTravelSelect"
+          ></el-autocomplete>
         </el-form-item>
 
         <!-- 富文本框 -->
         <el-form-item>
-          <!-- <VueEditor :config="config" ref="connentPost" /> -->
+          <VueEditor :config="config" ref="connentPost" />
         </el-form-item>
 
         <el-form-item>
@@ -44,7 +51,7 @@
 </template>
 
 <script>
-// import VueEditor from 'vue-word-editor'
+import VueEditor from 'vue-word-editor'
 import moment from 'moment'
 import 'quill/dist/quill.snow.css'
 export default {
@@ -53,9 +60,11 @@ export default {
       postForm: {
         title: '',
         content: '',
+        cityName: '',
         city: '',
         date: ''
       },
+      travelCityData: [],
       draftData: [],
       config: {
         // 上传图片的配置
@@ -80,19 +89,105 @@ export default {
     }
   },
   components: {
-    // VueEditor
+    VueEditor
   },
   methods: {
+    // 业务需求 输入的内容为空，不显示；输入内容，下拉列表显示（需要发送请求获取数据）
+    queryDepartSearch(value, callback) {
+      // 输入的值为空的时候，不显示下拉列表
+      if (value === '') {
+        callback([])
+        return
+      }
+      console.log(value)
+      // 根据输入的内容，发送请求获取 游记的城市名称 的信息
+      // 根据输入的内容，发送请求获取 出发实时机票城市 的信息
+      this.$axios({
+        url: '/airs/city',
+        params: {
+          name: value
+        }
+      }).then(res => {
+        console.log(res)
+        // this.travelCityData = res.data.data
+        const { data } = res.data
+        // console.log(data)
+        // 循环给data中每一项添加一个value属性，并且没有市字的
+        this.travelCityData = data.map(v => {
+          v.value = v.name
+          return v
+        })
+        console.log(this.travelCityData)
+        // this.travelCityData = [...data]
+        // 返回下拉列表的数组（value值）
+        callback(this.travelCityData)
+      })
+    },
+    // 目标城市下拉选择时触发
+    handleTravelCity(item) {
+      this.postForm.cityName = item.value
+      this.postForm.city = item.id
+    },
+    // 到达城市输入框失去焦点时候默认选中第一个城市
+    loseTravelSelect() {
+      if (this.travelCityData.length > 0) {
+        this.postForm.cityName = this.travelCityData[0].value
+        this.postForm.city = this.travelCityData[0].id
+      }
+    },
+    // 点击发布按钮
     onSubmit() {
-      console.log(111)
+      // 判断题目是否为空
+      if (!this.postForm.title) {
+        this.$alert('请填写标题', '提示', {
+          confirmButtonText: '确定',
+          type: 'warning'
+        })
+        return
+      }
       // 获取富文本的内容
-      var quill = this.$refs.connentPost.editor
-      quill.root.innerHTML
+      // var quill = this.$refs.connentPost.editor
+      // this.postForm.content = quill.root.innerHTML
+      // 判断内容是否为空
+      // if (!this.postForm.city) return this.$message.warning('请输入游记的内容')
+      // 判断城市是否为空
+      if (!this.postForm.cityName)
+        return this.$message.warning('请输入游记的城市')
+      if (!this.postForm.city)
+        return this.$message.warning('请选择正确的城市名称')
+      console.log(this.postForm)
+      const { date, cityName, ...form } = this.postForm
+      // form.city = +form.city
+      console.log(form)
+      // 获取token值
+      const {
+        user: { userInfo }
+      } = this.$store.state
+      // 未登录的状态
+      if (!userInfo.token) {
+        this.$message.warning('请先登录')
+        this.$router.push({ path: `/user/login` })
+        return
+      }
+      this.$axios({
+        method: 'post',
+        url: '/posts',
+        data: form,
+        headers: {
+          Authorization: `Bearer ${userInfo.token || 'NO TOKEN'}`
+        }
+      }).then(res => {
+        console.log(res)
+        if (res.data.message === '新增成功') {
+          this.$message.success(res.data.message)
+        }
+      })
     },
     // 保存为草稿
     toDraft() {
       if (!this.postForm.title) return this.$message.warning('请输入游记的标题')
-      if (!this.postForm.city) return this.$message.warning('请输入游记的城市')
+      if (!this.postForm.cityName)
+        return this.$message.warning('请输入游记的城市')
       this.postForm.content = 'creat'
       // this.postForm.date = new Date()
       this.postForm.date = moment(new Date()).format('YYYY-MM-DD')
@@ -105,8 +200,7 @@ export default {
       console.log(draftLocalData)
       // 覆盖本地存储
       window.localStorage.setItem('travelNotes', JSON.stringify(draftLocalData))
-      // this.$store.commit('user/travelNotes', this.draftData)
-      //
+      // 改变右侧栏的显示
       if (this.draftData.length !== draftLocalData) {
         this.draftData = draftLocalData
       }
