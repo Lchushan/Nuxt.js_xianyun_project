@@ -9,6 +9,11 @@
           <el-input v-model="postForm.title" placeholder="请输入标题"></el-input>
         </el-form-item>
 
+        <!-- 富文本框 -->
+        <el-form-item>
+          <VueEditor :config="config" ref="connentPost" />
+        </el-form-item>
+
         <el-form-item label="选择城市">
           <el-autocomplete
             :fetch-suggestions="queryDepartSearch"
@@ -18,11 +23,6 @@
             v-model="postForm.cityName"
             @blur="loseTravelSelect"
           ></el-autocomplete>
-        </el-form-item>
-
-        <!-- 富文本框 -->
-        <el-form-item>
-          <VueEditor :config="config" ref="connentPost" />
         </el-form-item>
 
         <el-form-item>
@@ -70,10 +70,10 @@ export default {
         // 上传图片的配置
         uploadImage: {
           url: 'http://127.0.0.1:1337/upload',
-          name: 'file',
+          name: 'files',
           // res是结果，insert方法会把内容注入到编辑器中，res.data.url是资源地址
           uploadSuccess(res, insert) {
-            insert('http://127.0.0.1:1337' + res.data.url)
+            insert('http://127.0.0.1:1337' + res.data[0].url)
           }
         },
 
@@ -82,7 +82,7 @@ export default {
           url: 'http://127.0.0.1:1337/upload',
           name: 'file',
           uploadSuccess(res, insert) {
-            insert('http://127.0.0.1:1337' + res.data.url)
+            insert('http://127.0.0.1:1337' + res.data[0].url)
           }
         }
       }
@@ -108,7 +108,7 @@ export default {
           name: value
         }
       }).then(res => {
-        console.log(res)
+        // console.log(res)
         // this.travelCityData = res.data.data
         const { data } = res.data
         // console.log(data)
@@ -146,10 +146,10 @@ export default {
         return
       }
       // 获取富文本的内容
-      // var quill = this.$refs.connentPost.editor
-      // this.postForm.content = quill.root.innerHTML
+      var quill = this.$refs.connentPost.editor
+      this.postForm.content = quill.root.innerHTML
       // 判断内容是否为空
-      // if (!this.postForm.city) return this.$message.warning('请输入游记的内容')
+      if (!this.postForm.city) return this.$message.warning('请输入游记的内容')
       // 判断城市是否为空
       if (!this.postForm.cityName)
         return this.$message.warning('请输入游记的城市')
