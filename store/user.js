@@ -1,11 +1,13 @@
 // 保存user下的数据
 export const state = {
   // 登录用户的信息
-  userInfo: ''
+  userInfo: '',
+  // // 写游记的草稿
+  // travelNotes: ''
 }
 
 
-// 同步修改state的数据
+// 同步修改state的数据()
 export const mutations = {
   //自定义一个函数，修改name属性
   // mutations函数的第一和参数必须是state，state就是上面的state对象
@@ -13,11 +15,15 @@ export const mutations = {
   setUserInfo(state, data) {
     // 函数的修改方式是为了方便修改的其他逻辑
     state.userInfo = data
-  }
+  },
+  // setTravelNotes(state, data) {
+  //   // 函数的修改方式是为了方便修改的其他逻辑
+  //   state.travelNotes = data
+  // }
 }
 
 
-// 异步修改state的数据
+// 异步修改state的数据(this.$store.dispatch)
 export const actions = {
   // 1. 发送登录请求
   login(state, data) {

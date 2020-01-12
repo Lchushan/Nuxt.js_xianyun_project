@@ -128,7 +128,7 @@ export default {
         if (valid) {
           // 获取发送注册请求需要的4个重要参数 username,nickname,captcha,password === props
           const { checkPassword, ...props } = this.form
-          console.log(props)
+          // console.log(props)
           // 调用state中的注册请求
           this.$store.dispatch('user/register', props).then(res => {
             if (res) {
