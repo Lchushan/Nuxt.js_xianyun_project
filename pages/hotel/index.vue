@@ -27,19 +27,19 @@
       <el-form-item>
         <el-popover placement="bottom" width="400" trigger="click">
           <div class="personNumber">
-            <div>每间</div>
+            <!-- <div>每间</div> -->
             <!-- 成人人数 -->
-            <el-select v-model="adultNum">
+            <!-- <el-select v-model="adultNum">
               <el-option label="1" value="01"></el-option>
               <el-option label="2" value="02"></el-option>
               <el-option label="3" value="03"></el-option>
-            </el-select>
+            </el-select>-->
             <!-- 儿童人数 -->
-            <el-select v-model="childNum">
+            <!-- <el-select v-model="childNum">
               <el-option label="0" value="0"></el-option>
               <el-option label="1" value="1"></el-option>
               <el-option label="2" value="2"></el-option>
-            </el-select>
+            </el-select>-->
           </div>
           <div class="btn-col">
             <el-button type="primary">确定</el-button>
@@ -100,7 +100,7 @@
       </div>-->
     </div>
     <!-- 酒店列表 -->
-    <HotelPostList  />
+    <HotelPostList />
     <!-- 分页模块 -->
     <div class="paging">
       <el-pagination small layout="prev, pager, next" :total="50"></el-pagination>
@@ -119,7 +119,7 @@ export default {
         person: ''
       },
       adultNum: '',
-      childNum:'',
+      childNum: '',
       value: 100,
       // filter: ['住宿条件', '住宿类型', '酒店设施', '酒店品牌'],
       filter: [

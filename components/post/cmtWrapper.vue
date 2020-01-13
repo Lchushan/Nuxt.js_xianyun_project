@@ -19,6 +19,7 @@
       <!-- <el-form-item> -->
       <div>
         <el-upload
+          ref="uploadImg"
           action="http://127.0.0.1:1337/upload"
           :on-success="coverSuccess"
           list-type="picture-card"
@@ -107,6 +108,7 @@ export default {
       if (!this.commentFild.content.trim()) {
         return this.$message.warning('请输入评论内容')
       }
+      this.$refs.uploadImg.clearFiles()
       // 向父组件发送点击请求
       this.$emit('submitFile', this.commentFild)
     },
