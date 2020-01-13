@@ -6,7 +6,7 @@
         {{data.account.nickname}}
         <i>{{data.account.created_at|dataFormat('-')}}</i>
       </div>
-      <span>{{commentNumber}}</span>
+      <span>{{commentNumber}} 楼</span>
     </div>
     <div class="ctm-content">
       <!-- 二级评论 -->

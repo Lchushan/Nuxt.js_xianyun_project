@@ -5,7 +5,7 @@
         {{areaData.account.nickname}}
         <i>{{areaData.account.created_at|dataFormat('-')}}</i>
       </div>
-      <span>{{commentNumber}}</span>
+      <span>{{commentNumber}} 楼</span>
     </div>
     <!-- 递归评论 -->
     <recursion
@@ -66,6 +66,7 @@ export default {
   .cmt-info {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 10px;
     .user {
       font-size: 12px;
       color: #666;

@@ -91,7 +91,9 @@ export default {
     // 点击搜索栏的搜索按钮，跳转页面，并得到结果
     // this.searchValue：搜索的关键词
     handleSearch() {
-      this.$router.push(item.pageUrl + this.searchValue)
+      // console.log(item.pageUrl)
+      console.log(this.searchValue)
+      // this.$router.push(item.pageUrl + this.searchValue)
     }
   }
 }

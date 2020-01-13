@@ -38,11 +38,16 @@
         <div class="draft-list">
           <!-- 草稿列表 -->
           <div class="draft-item" v-for="(item,index) in draftData" :key="index">
-            <div class="draft-post-list" @click="toEditDraft(item)">
-              {{item.title}}
-              <i class="el-icon-edit"></i>
+            <div class="draft-left">
+              <div class="draft-post-list" @click="toEditDraft(item)">
+                {{item.title}}
+                <i class="el-icon-edit"></i>
+              </div>
+              <p>{{item.date}}</p>
             </div>
-            <p>{{item.date}}</p>
+            <div class="draft-del" @click="toDelDraft(index)">
+              <i class="el-icon-close"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -98,7 +103,7 @@ export default {
         callback([])
         return
       }
-      console.log(value)
+      // console.log(value)
       // 根据输入的内容，发送请求获取 游记的城市名称 的信息
       // 根据输入的内容，发送请求获取 出发实时机票城市 的信息
       this.$axios({
@@ -158,10 +163,10 @@ export default {
       var quill = this.$refs.connentPost.editor
       this.postForm.content = quill.root.innerHTML
       // 判断内容是否为空
-      if (!this.postForm.city) return this.$message.warning('请输入游记的内容')
+      if (!this.postForm.content) return this.$message.warning('请输入游记的内容')
       // 判断城市是否为空
       if (!this.postForm.cityName)
-        return this.$message.warning('请输入游记的城市')
+      return this.$message.warning('请输入游记的城市')
       if (!this.postForm.city)
         return this.$message.warning('请选择正确的城市名称')
       // console.log(this.postForm)
@@ -191,7 +196,7 @@ export default {
       if (!this.postForm.title) return this.$message.warning('请输入游记的标题')
       if (!this.postForm.cityName)
         return this.$message.warning('请输入游记的城市')
-      this.postForm.content = 'creat'
+      this.postForm.content = this.$refs.connentPost.editor.root.innerHTML
       // this.postForm.date = new Date()
       this.postForm.date = moment(new Date()).format('YYYY-MM-DD')
       // 从本地存储提取
@@ -200,7 +205,7 @@ export default {
       )
       // 前添加
       draftLocalData.unshift(this.postForm)
-      console.log(draftLocalData)
+      // console.log(draftLocalData)
       // 覆盖本地存储
       window.localStorage.setItem('travelNotes', JSON.stringify(draftLocalData))
       // 改变右侧栏的显示
@@ -211,6 +216,23 @@ export default {
     // 编辑草稿
     toEditDraft(data) {
       this.postForm = data
+      this.$refs.connentPost.editor.root.innerHTML = this.postForm.content
+    },
+    // 删除草稿
+    toDelDraft(index) {
+      console.log(index)
+      // 从本地存储提取
+      let draftLocalData = JSON.parse(
+        window.localStorage.getItem('travelNotes')
+      )
+      // 删除当前数据
+      draftLocalData.splice(index, 1)
+      // 覆盖本地存储
+      window.localStorage.setItem('travelNotes', JSON.stringify(draftLocalData))
+      // 改变右侧栏的显示
+      if (this.draftData.length !== draftLocalData) {
+        this.draftData = draftLocalData
+      }
     }
   },
   mounted() {
@@ -270,20 +292,24 @@ export default {
       }
       .draft-item {
         display: flex;
-        flex-direction: column;
         justify-content: space-between;
-        margin-bottom: 10px;
-        height: 38px;
-        font-size: 14px;
-        div.draft-post-list {
-          cursor: pointer;
-          &:hover {
-            color: #ffa500;
-            text-decoration: underline;
+        .draft-left {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          margin-bottom: 10px;
+          height: 38px;
+          font-size: 14px;
+          div.draft-post-list {
+            cursor: pointer;
+            &:hover {
+              color: #ffa500;
+              text-decoration: underline;
+            }
           }
-        }
-        p {
-          color: #999;
+          p {
+            color: #999;
+          }
         }
       }
     }

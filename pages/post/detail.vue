@@ -309,6 +309,7 @@ export default {
         width: 100px;
         height: 80px;
         background-color: #fff;
+        background-color: #ddd;
       }
       .post-text {
         display: flex;
