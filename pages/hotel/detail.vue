@@ -4,37 +4,37 @@
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">酒店</el-breadcrumb-item>
       <el-breadcrumb-item>
-        <a href="/hotel">南京酒店</a>
+        <a href="/hotel">{{hotelDetailData.real_city}}{{hotelDetailData.big_cate}}</a>
       </el-breadcrumb-item>
-      <el-breadcrumb-item>好来商务宾馆</el-breadcrumb-item>
+      <el-breadcrumb-item>{{hotelDetailData.name}}</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 旅店名字信息 -->
     <div class="name-info">
       <h4>
-        好来商务宾馆
+        {{hotelDetailData.name}}
         <i class="el-icon-trophy"></i>
         <i class="el-icon-trophy"></i>
         <i class="el-icon-trophy"></i>
       </h4>
-      <div class="name-info-content">7 tian lian suo hotel</div>
+      <div class="name-info-content">{{hotelDetailData.alias}}</div>
       <div class="location">
         <i class="el-icon-location"></i>
-        <span>位于：官话路114号</span>
+        <span>位于：{{hotelDetailData.address}}</span>
       </div>
     </div>
     <!-- 旅店图片信息 -->
     <div class="pic-info">
       <el-row>
         <el-col :span="16">
-          <div class="main-pic"></div>
+          <div class="main-pic">
+            <img :src="picInfoBigImg||picInfoImg[0]" alt />
+          </div>
         </el-col>
         <el-col :span="8">
           <div class="list-pic">
-            <el-row>
+            <el-row :gutter="20">
               <el-col :span="12" class="list-item" v-for="(item,index) in picInfoImg" :key="index">
-                <div>
-                  <img :src="item" alt />
-                </div>
+                <img :src="item" @click="toChangeImg(index)" alt />
               </el-col>
             </el-row>
           </div>
@@ -42,10 +42,10 @@
       </el-row>
     </div>
     <!-- 旅店表格信息 -->
-    <el-table class="table-info" :data="hotelData" style="width: 100%">
-      <el-table-column prop="priceSource" label="价格来源" width="420"></el-table-column>
-      <el-table-column prop="cheapRoom" label="低价房型" width="420"></el-table-column>
-      <el-table-column prop="minPrice" label="最低价格/每晚"></el-table-column>
+    <el-table class="table-info" :data="hotelDetailData.products" style="width: 100%">
+      <el-table-column prop="name" label="价格来源" width="420"></el-table-column>
+      <el-table-column prop="bestType" label="低价房型" width="420"></el-table-column>
+      <el-table-column prop="price" label="最低价格/每晚"></el-table-column>
     </el-table>
     <!-- 附近的景点地图信息 -->
     <div class="spot-map">
@@ -160,10 +160,10 @@
         </el-col>
         <el-col :span="20">
           <div class="spot-table-content">
-            <div>入住时间：1400之后</div>
-            <div>离店时间：12：00之前</div>
-            <div>2010年开业/2015年装修</div>
-            <div>酒店规模：148间客房</div>
+            <div>入住时间：14:00之后</div>
+            <div>离店时间：12:00之前</div>
+            <div>{{hotelDetailData.creation_time}}/{{hotelDetailData.renovat_time}}</div>
+            <div>酒店规模：{{hotelDetailData.roomCount}}间客房</div>
           </div>
         </el-col>
       </el-row>
@@ -203,9 +203,9 @@
       <div class="scores-row">
         <el-row>
           <el-col :span="4">
-            <p>总评数：42</p>
-            <p>好评数：11</p>
-            <p>差评数：0</p>
+            <p>总评数：{{hotelDetailData.very_good_remarks+hotelDetailData.very_bad_remarks}}</p>
+            <p>好评数：{{hotelDetailData.very_good_remarks}}</p>
+            <p>差评数：{{hotelDetailData.very_bad_remarks}}</p>
           </el-col>
           <el-col :span="5">
             <div class="star">
@@ -218,15 +218,9 @@
               ></el-rate>
             </div>
           </el-col>
-          <el-col :span="3">
-            
-          </el-col>
-          <el-col :span="3">
-            
-          </el-col>
-          <el-col :span="3">
-            
-          </el-col>
+          <el-col :span="3"></el-col>
+          <el-col :span="3"></el-col>
+          <el-col :span="3"></el-col>
         </el-row>
       </div>
     </div>
@@ -237,7 +231,15 @@
 export default {
   data() {
     return {
-      picInfoImg: ['1', '2', '3', '4', '5', '6'],
+      picInfoBigImg: '',
+      picInfoImg: [
+        'http://157.122.54.189:9093/images/hotel-pics/1.jpeg',
+        'http://157.122.54.189:9093/images/hotel-pics/2.jpeg',
+        'http://157.122.54.189:9093/images/hotel-pics/3.jpeg',
+        'http://157.122.54.189:9093/images/hotel-pics/4.jpeg',
+        'http://157.122.54.189:9093/images/hotel-pics/5.jpeg',
+        'http://157.122.54.189:9093/images/hotel-pics/6.jpeg'
+      ],
       hotelData: [
         {
           priceSource: '携程',
@@ -256,13 +258,31 @@ export default {
         }
       ],
       activeName: 'second',
-      value: 4.5
+      value: 4.5,
+      hotelDetailData: []
     }
   },
   methods: {
     handleClick(tab, event) {
       console.log(tab, event)
+    },
+    // 点击更换旅游图片的大图片
+    toChangeImg(index) {
+      this.picInfoBigImg = this.picInfoImg[index]
     }
+  },
+  mounted() {
+    // console.log()
+    this.$axios({
+      url: '/hotels',
+      params: {
+        id: this.$route.query.hotelId
+      }
+    }).then(res => {
+      this.hotelDetailData = res.data.data[0]
+      this.value = this.hotelDetailData.stars
+      console.log(this.hotelDetailData)
+    })
   }
 }
 </script>
@@ -291,18 +311,19 @@ export default {
     margin: 40px 0;
     .main-pic {
       width: 640px;
-      height: 320px;
-      background-color: pink;
+      height: 360px;
+      overflow: hidden;
+      // background-color: pink;
       > img {
         width: 100%;
       }
     }
     .list-pic {
       .list-item {
-        width: 160px;
-        background-color: green;
+        margin-bottom: 10px;
         img {
           height: 110px;
+          cursor: pointer;
         }
       }
     }

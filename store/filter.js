@@ -1,4 +1,4 @@
-
+// 日期格式化
 export const dataFormat = (data, spe) => {
   data = new Date(data)
   spe = spe || '/'
