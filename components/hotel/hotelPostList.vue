@@ -1,14 +1,14 @@
 <template>
   <div class="hotelList">
     <!-- 旅店的图片 -->
-    <div class="hotel-img" @click="$router.push({path:'/hotel/detail'})">
-      <img src="/hotel" alt />
+    <div class="hotel-img" @click="$router.push({path:`/hotel/detail?hotelId=${dataList.id}`})">
+      <img :src="dataList.photos" alt />
     </div>
     <!-- 旅店的信息 -->
     <div class="hotel-info">
-      <h4>7天连锁酒店</h4>
+      <h4>{{dataList.name}}</h4>
       <div class="hotel-info-content">
-        <span>7 tian lian suo hotel7 tian lian suo hotel7 tian lian suo hotel7 tian lian suo hotel7 tian lian suo hotel7 tian lian suo hotel7 tian lian suo hotel7 tian lian suo hotel</span>
+        <span>{{dataList.alias}}</span>
         <i class="el-icon-trophy"></i>
         <i class="el-icon-trophy"></i>
         <i class="el-icon-trophy"></i>
@@ -34,13 +34,13 @@
       <div class="user-comment"></div>
       <div class="location">
         <i class="el-icon-location"></i>
-        <span>位于：官话路114号</span>
+        <span>位于：{{dataList.address}}</span>
       </div>
     </div>
     <!-- 旅店相关的介绍 -->
     <div class="hotel-corren">
       <el-table :data="tableHotel" style="width: 100%" :show-header="false">
-        <el-table-column prop="hotel" width="118"></el-table-column>
+        <el-table-column prop="name" width="118"></el-table-column>
         <el-table-column prop="price" width="117"></el-table-column>
       </el-table>
     </div>
@@ -49,24 +49,27 @@
 
 <script>
 export default {
+  props: ['dataList'],
   data() {
     return {
-      tableHotel: [
-        {
-          hotel: '携程',
-          price: '￥155'
-        },
-        {
-          hotel: '携程',
-          price: '￥155'
-        },
-        {
-          hotel: '携程',
-          price: '￥155'
-        }
-      ],
-      value: 3.7
+      // tableHotel: [],
+      // value: 3.7
     }
+  },
+  computed: {
+    tableHotel() {
+      let arr = this.dataList.products.map(v => {
+        v.price = '￥' + v.price + ' 元'
+        return v
+      })
+      return arr
+    },
+    value() {
+      return this.dataList.stars
+    }
+  },
+  mounted(){
+    console.log(this.dataList)
   }
 }
 </script>
@@ -82,7 +85,11 @@ export default {
     padding: 0 10px;
     width: 320px;
     height: 210px;
-    background-color: yellow;
+    overflow: hidden;
+    // background-color: yellow;
+    > img {
+      width: 100%;
+    }
   }
   .hotel-info {
     padding: 0 10px;

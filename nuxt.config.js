@@ -67,3 +67,11 @@ export default {
     }
   }
 }
+
+
+// "config": {
+//   "nuxt": {
+//     "host": "0.0.0.0",
+//     "post": 3000
+//   }
+// }
